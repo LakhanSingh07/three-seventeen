@@ -1,0 +1,8 @@
+asset_id,filename,folder,category,width,height,aspect_ratio,characters_present,location,story_role,evidence_id,critical_or_filler,notes
+CHAR-001,sarah_profile.webp,characters,character,1024,1024,1:1,Sarah Mehta,Sarah's Apartment,contact avatar and identity master,,critical,Canonical identity reference for every Sarah image
+CHAR-002,alex_profile.webp,characters,character,1024,1024,1:1,Alex,Alex's Apartment,contact avatar and identity master,,critical,Canonical identity reference for every Alex image
+CHAR-003,maya_profile.webp,characters,character,1024,1024,1:1,Maya,Sarah's Apartment,contact avatar and identity master,,critical,Canonical identity reference for every Maya image
+CHAR-004,ryan_profile.webp,characters,character,1024,1024,1:1,Ryan Desai,Tech Park,contact avatar and identity master,,critical,Canonical identity reference for every Ryan image
+CHAR-005,daniel_profile.webp,characters,character,1024,1024,1:1,Daniel,Urban interior,contact avatar and identity master,,critical,Canonical identity reference for every Daniel image
+CHAR-006,unknown_avatar.webp,characters,character,1024,1024,1:1,Unknown Caller,Central Station,obscured contact avatar,,critical,No identifiable face; or identity-revealing detail
+
