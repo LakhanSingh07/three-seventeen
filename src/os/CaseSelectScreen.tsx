@@ -1,210 +1,206 @@
-import React from 'react';
-import { RotateCcw, FolderOpen } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Folder, ArrowRight, Volume2, VolumeX } from 'lucide-react';
 import type { CaseData, CaseSaveState } from '../cases/types';
 import { soundEngine } from '../system/SoundEngine';
 import { hapticEngine } from '../system/HapticEngine';
+import { audioManager } from '../system/AudioManager';
+import { usePrefersReducedMotion } from '../scene/usePrefersReducedMotion';
 
-interface CaseSelectScreenProps {
+interface Props {
   caseData: CaseData;
   saveState: CaseSaveState | null;
   onStartCase: () => void;
   onResetCase?: () => void;
 }
 
-export const CaseSelectScreen: React.FC<CaseSelectScreenProps> = ({
-  caseData,
-  saveState,
-  onStartCase,
-  onResetCase,
-}) => {
-  const hasStarted = saveState && (saveState.discoveredEvidenceIds.length > 0 || saveState.unlockedDeductionIds.length > 0);
-  const isFinished = saveState?.caseFinished;
+export function CaseSelectScreen({ caseData, saveState, onStartCase, onResetCase }: Props) {
+  const [videoError, setVideoError] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const [isAudioMuted, setIsAudioMuted] = useState(() => audioManager.isMusicMuted());
 
-  const handleLaunch = () => {
+  const hasStarted =
+    !!saveState &&
+    (saveState.discoveredEvidenceIds.length > 0 || saveState.unlockedDeductionIds.length > 0);
+
+  // Subscribe to audio settings changes
+  useEffect(() => {
+    return audioManager.subscribe(() => {
+      setIsAudioMuted(audioManager.isMusicMuted());
+    });
+  }, []);
+
+  // Canonical title theme lifecycle + muted background video
+  useEffect(() => {
+    // Start Midnight Evidence with gentle 2.0s fade-in (single-instance protected)
+    audioManager.playTitleTheme({ fadeInDuration: 2.0 });
+
+    if (videoRef.current) {
+      // The video MUST remain strictly muted as specified
+      videoRef.current.muted = true;
+      if (!prefersReducedMotion) {
+        videoRef.current.play().catch(() => {
+          // Handled gracefully
+        });
+      }
+    }
+  }, [prefersReducedMotion]);
+
+  const launch = () => {
     soundEngine.playDeskLampToggle();
     hapticEngine.medium();
+
+    // Studio crossfade: Midnight Evidence fades down while Silent Investigation fades up over 2.4s
+    audioManager.crossfadeToInvestigation({ durationSec: 2.4 });
     onStartCase();
   };
 
-  return (
-    <div
-      style={{
-        flex: 1,
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        backgroundImage: 'url(/assets/case001/case-art/case001_cover.webp)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        color: '#f8fafc',
-        padding: '36px 24px 28px 24px',
-        position: 'relative',
-        overflow: 'hidden',
-        userSelect: 'none',
-      }}
-    >
-      {/* Dark Vignette Overlay */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'linear-gradient(180deg, rgba(7, 9, 14, 0.7) 0%, rgba(7, 9, 14, 0.4) 40%, rgba(7, 9, 14, 0.95) 100%)',
-          pointerEvents: 'none',
-        }}
-      />
+  const handleToggleAudio = () => {
+    soundEngine.playTap();
+    audioManager.toggleMusicMute();
+  };
 
-      {/* Top Header */}
-      <div style={{ zIndex: 10, textAlign: 'center' }}>
+  const videoSrc = '/assets/Create_a_premium_cinematic_amb_gwr_video_mvp.mp4';
+  const posterSrc = '/assets/case001/case-art/case001_cover.webp';
+  const sarahPhotoSrc = '/assets/case001/characters/sarah_profile.webp';
+
+  return (
+    <main className="case-select-screen">
+      {/* LAYER 0: Existing full-screen portrait background video */}
+      {!prefersReducedMotion && !videoError ? (
+        <video
+          ref={videoRef}
+          className="title-bg-video"
+          src={videoSrc}
+          poster={posterSrc}
+          autoPlay
+          loop
+          muted
+          playsInline
+          onError={() => setVideoError(true)}
+          aria-hidden="true"
+        />
+      ) : (
         <div
-          style={{
-            fontSize: '11px',
-            color: '#94a3b8',
-            letterSpacing: '3px',
-            textTransform: 'uppercase',
-            fontWeight: 700,
-          }}
-        >
+          className="title-bg-poster"
+          style={{ backgroundImage: `url(${posterSrc})` }}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* LAYER 1: Subtle cinematic dark gradient & vignette */}
+      <div className="title-cinematic-overlay" />
+      <div className="title-vignette" />
+
+      {/* FOREGROUND CONTENT CONTAINER */}
+      <div className="title-content-container">
+        {/* LAYER 2: Top Eyebrow */}
+        <div className="title-eyebrow">
           AN INTERACTIVE DETECTIVE INVESTIGATION
         </div>
-      </div>
 
-      {/* Center Cinematic Title Branding */}
-      <div style={{ zIndex: 10, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-        <h1
-          style={{
-            fontSize: '80px',
-            fontWeight: 900,
-            fontFamily: 'var(--font-mono)',
-            letterSpacing: '8px',
-            lineHeight: 1,
-            margin: '0 0 8px 0',
-            background: 'linear-gradient(180deg, #ffffff 30%, #94a3b8 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            textShadow: '0 10px 40px rgba(0, 0, 0, 0.9)',
-          }}
-        >
-          3:17
-        </h1>
+        {/* LAYER 3: Main Weathered Title 3:17 */}
+        <div className="title-hero-wrap">
+          <h1 className="title-hero-317" aria-label="3:17">
+            <span className="title-digits">3:17</span>
+          </h1>
 
-        <p
-          style={{
-            fontSize: '14px',
-            color: '#cbd5e1',
-            letterSpacing: '2px',
-            margin: '0 0 28px 0',
-            fontWeight: 400,
-            fontStyle: 'italic',
-          }}
-        >
-          Every phone has a story.
-        </p>
-
-        {/* Case Dossier Card */}
-        <div
-          style={{
-            width: '100%',
-            maxWidth: '380px',
-            background: 'rgba(15, 23, 42, 0.8)',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255, 255, 255, 0.15)',
-            borderRadius: '16px',
-            padding: '20px',
-            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.8)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '12px',
-            textAlign: 'left',
-          }}
-        >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '11px', fontWeight: 800, color: '#f59e0b', letterSpacing: '1px', textTransform: 'uppercase' }}>
-              CASE 001 // OPEN INVESTIGATION
-            </span>
-            <span style={{ fontSize: '10px', color: '#94a3b8', background: 'rgba(255,255,255,0.08)', padding: '2px 8px', borderRadius: '4px' }}>
-              Standard • ~30m
-            </span>
-          </div>
-
-          <div>
-            <div style={{ fontSize: '18px', fontWeight: 800, color: '#ffffff' }}>
-              {caseData.title.replace('Case 001: ', '')}
-            </div>
-            <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }}>
-              Subject: {caseData.victimName} • Age {caseData.victimAge}
-            </div>
-          </div>
-
-          <p style={{ fontSize: '12px', color: '#cbd5e1', lineHeight: 1.5, margin: 0 }}>
-            A young data analyst vanishes in the dead of night. Her recovered smartphone is your only lead.
+          {/* LAYER 4: Tagline */}
+          <p className="title-hero-tagline">
+            EVERY PHONE HAS A STORY
           </p>
+        </div>
 
-          {hasStarted && (
-            <div style={{ fontSize: '11px', color: '#38bdf8', fontWeight: 600 }}>
-              Progress: {saveState.discoveredEvidenceIds.length} Clues Logged • {saveState.unlockedDeductionIds.length} Deductions
+        {/* LAYER 5: Physical Case 001 Dossier with Attached Sarah Polaroid */}
+        <div className="title-dossier-wrapper">
+          <article className="title-dossier-card">
+            {/* Header row */}
+            <div className="dossier-header-row">
+              <span className="dossier-case-label">CASE 001</span>
+              <span className="dossier-red-line" />
+              <span className="dossier-date-badge">08 SEP</span>
+              <span className="dossier-open-tag">OPEN INVESTIGATION</span>
             </div>
-          )}
 
-          {isFinished && (
-            <div style={{ fontSize: '11px', color: '#86efac', fontWeight: 700 }}>
-              ✓ Case Completed & Solved
+            {/* Bullet / rivet accent */}
+            <div className="dossier-bullet" aria-hidden="true" />
+
+            {/* Text column */}
+            <div className="dossier-text-col">
+              <h2 className="dossier-case-title">The Missing Girl</h2>
+              <div className="dossier-subject-meta">
+                Subject: {caseData.victimName} &nbsp;|&nbsp; Age: {caseData.victimAge} &nbsp;|&nbsp; Date: Sep 8
+              </div>
+              <p className="dossier-case-desc">
+                A young data analyst vanishes in the dead of night. Her recovered smartphone is your only lead.
+              </p>
             </div>
-          )}
 
+            {/* Attached Physical Polaroid on the right */}
+            <div className="dossier-polaroid-photo" aria-hidden="true">
+              <div className="polaroid-frame">
+                <img
+                  src={sarahPhotoSrc}
+                  alt={caseData.victimName}
+                  className="polaroid-img"
+                />
+                <span className="polaroid-caption">SARAH MEHTA</span>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        {/* LAYER 6: Real interactive ENTER INVESTIGATION ROOM control (Yellow kraft tape strip) */}
+        <div className="title-cta-wrapper">
           <button
-            onClick={handleLaunch}
-            style={{
-              marginTop: '4px',
-              background: 'linear-gradient(135deg, #0284c7, #0369a1)',
-              border: '1px solid #38bdf8',
-              borderRadius: '10px',
-              padding: '12px',
-              color: '#ffffff',
-              fontSize: '13px',
-              fontWeight: 800,
-              letterSpacing: '1px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              boxShadow: '0 4px 15px rgba(2, 132, 199, 0.4)',
-              transition: 'transform 0.15s ease',
-            }}
+            type="button"
+            className="title-cta-strip"
+            onClick={launch}
+            aria-label="Enter investigation room"
           >
-            <FolderOpen size={16} />
-            <span>{hasStarted ? 'RESUME INVESTIGATION' : 'ENTER INVESTIGATION ROOM'}</span>
+            <Folder className="cta-folder-icon" size={20} strokeWidth={2.2} />
+            <span className="cta-label">
+              {hasStarted ? 'RESUME INVESTIGATION' : 'ENTER INVESTIGATION ROOM'}
+            </span>
+            <ArrowRight className="cta-arrow-icon" size={20} strokeWidth={2.4} />
           </button>
         </div>
-      </div>
 
-      {/* Bottom Controls / Reset */}
-      <div style={{ zIndex: 10, display: 'flex', alignItems: 'center', gap: '16px' }}>
+        {/* LAYER 7: Restrained bottom tagline */}
+        <div className="title-bottom-tagline">
+          THE TRUTH IS STILL OUT THERE
+        </div>
+
+        {/* Discreet audio control */}
+        <button
+          type="button"
+          className="title-audio-toggle"
+          onClick={handleToggleAudio}
+          aria-label={isAudioMuted ? 'Unmute music' : 'Mute music'}
+          title={isAudioMuted ? 'Unmute music' : 'Mute music'}
+        >
+          {isAudioMuted ? (
+            <VolumeX size={13} className="audio-icon-muted" />
+          ) : (
+            <Volume2 size={13} className="audio-icon-active" />
+          )}
+          <span className="audio-toggle-label">{isAudioMuted ? 'MUTED' : 'AUDIO'}</span>
+        </button>
+
+        {/* Optional Reset Progress link if started */}
         {hasStarted && onResetCase && (
           <button
+            type="button"
+            className="title-reset-link"
             onClick={() => {
               soundEngine.playTap();
               onResetCase();
             }}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: '#94a3b8',
-              fontSize: '11.5px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '5px',
-              cursor: 'pointer',
-            }}
           >
-            <RotateCcw size={12} />
-            <span>Reset Case Progress</span>
+            Reset case progress
           </button>
         )}
       </div>
-    </div>
+    </main>
   );
-};
+}

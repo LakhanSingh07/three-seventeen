@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
-
 :root {
   --bg-core: #07080c;
   --bg-phone: #0c0e15;
@@ -195,20 +193,23 @@ body {
   flex-direction: column;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
   .phone-chassis {
-    max-width: 100%;
-    max-height: 100%;
-    border-radius: 0;
-    box-shadow: none;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    width: 100vw !important;
+    height: 100dvh !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
   }
 }
 
 /* Clue highlight indicator inside messages/notes */
 .clue-badge {
-  background: linear-gradient(135deg, rgba(255, 87, 34, 0.2), rgba(255, 112, 67, 0.1));
-  border: 1px dashed rgba(255, 87, 34, 0.6);
-  border-radius: var(--radius-sm);
+  background: rgba(255, 87, 34, 0.15);
+  border: 1px dashed rgba(255, 87, 34, 0.5);
+  border-radius: 4px;
   padding: 2px 6px;
   color: #ffab91;
   font-size: 0.85em;
@@ -221,14 +222,400 @@ body {
 }
 
 .clue-badge:hover {
-  background: rgba(255, 87, 34, 0.35);
+  background: rgba(255, 87, 34, 0.28);
   border-color: #ff5722;
-  box-shadow: 0 0 10px rgba(255, 87, 34, 0.4);
 }
 
 .clue-badge.discovered {
   border-style: solid;
-  border-color: rgba(0, 230, 118, 0.6);
-  background: rgba(0, 230, 118, 0.15);
-  color: #a7f3d0;
+  border-color: rgba(74, 222, 128, 0.5);
+  background: rgba(74, 222, 128, 0.12);
+  color: #86efac;
 }
+
+/* ==================================================
+   TITLE / CASE ENTRY SCREEN (Exact Reference Design)
+   ================================================== */
+.case-select-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background: #04060a;
+}
+
+/* Layer 0: Fullscreen background video & poster fallback */
+.title-bg-video,
+.title-bg-poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center bottom;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Layer 1: Subtle cinematic dark gradient & vignette */
+.title-cinematic-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(4, 7, 12, 0.76) 0%,
+    rgba(4, 7, 12, 0.38) 22%,
+    rgba(3, 5, 9, 0.46) 48%,
+    rgba(2, 4, 7, 0.65) 75%,
+    rgba(2, 3, 6, 0.82) 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+.title-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 32%, transparent 35%, rgba(2, 3, 6, 0.6) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Foreground content container */
+.title-content-container {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  max-width: 414px;
+  padding: calc(env(safe-area-inset-top, 24px) + 12px) 16px calc(env(safe-area-inset-bottom, 16px) + 14px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* Layer 2: Top Eyebrow - Guaranteed uncropped with responsive scaling */
+.title-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(8px, 2.15vw, 9.5px);
+  line-height: 1.2;
+  letter-spacing: clamp(2.2px, 0.75vw, 3.8px);
+  text-transform: uppercase;
+  color: #cdd6e4;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.95);
+  margin-top: clamp(6px, 1.4vh, 16px);
+  margin-bottom: clamp(52px, 8.5vh, 88px);
+  white-space: nowrap;
+  max-width: 100%;
+  padding: 0 8px;
+  box-sizing: border-box;
+  opacity: 0.94;
+  overflow: visible;
+}
+
+/* Layer 3 & 4: 3:17 Weathered Hero Title & Tagline */
+.title-hero-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Push mid section and CTA further down into lower viewport */
+  margin-bottom: clamp(54px, 8.5vh, 92px);
+}
+
+.title-hero-317 {
+  margin: 0;
+  line-height: 0.88;
+  text-shadow: 0 4px 28px rgba(0, 0, 0, 0.98);
+}
+
+.title-digits {
+  display: inline-block;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(82px, 22vw, 98px);
+  font-weight: 800;
+  letter-spacing: 4.5px;
+  color: #f8fafc;
+  /* Distressed forensic case-file styling */
+  background-image: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #f8fafc 42%,
+    rgba(203, 213, 225, 0.85) 45%,
+    rgba(148, 163, 184, 0.7) 48%,
+    #f8fafc 52%,
+    #ffffff 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 4px 18px rgba(0, 0, 0, 0.95));
+}
+
+.title-hero-tagline {
+  font: 11px/1 'JetBrains Mono', monospace;
+  letter-spacing: 4.2px;
+  text-transform: uppercase;
+  color: #c8d4e2;
+  margin-top: 14px;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+  opacity: 0.92;
+}
+
+/* Layer 5: Physical Case 001 Dossier (Mid Section) */
+.title-dossier-wrapper {
+  width: 100%;
+  max-width: 352px;
+  margin-bottom: clamp(28px, 4vh, 40px);
+  position: relative;
+}
+
+.title-dossier-card {
+  position: relative;
+  background-color: #dfd7c3;
+  border-radius: 2px;
+  padding: 16px 18px 18px 18px;
+  text-align: left;
+  box-shadow: 0 20px 42px rgba(0, 0, 0, 0.88), 0 3px 8px rgba(0, 0, 0, 0.65);
+  color: #2b231a;
+  border: 1px solid rgba(135, 116, 88, 0.45);
+  transform: rotate(-0.4deg);
+}
+
+.dossier-header-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 7px;
+}
+
+.dossier-case-label {
+  font: bold 11px/1 'JetBrains Mono', monospace;
+  color: #991b1b;
+  letter-spacing: 1.2px;
+  flex-shrink: 0;
+}
+
+.dossier-red-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(153, 27, 27, 0.45);
+  margin: 0 4px;
+}
+
+.dossier-date-badge {
+  font: bold 9px/1 'JetBrains Mono', monospace;
+  color: #6b4d30;
+  letter-spacing: 1.2px;
+  flex-shrink: 0;
+  margin-right: 4px;
+}
+
+.dossier-open-tag {
+  font: 8.5px/1 'JetBrains Mono', monospace;
+  color: #4a3e30;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.dossier-bullet {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #2b2219;
+  margin-bottom: 6px;
+}
+
+.dossier-text-col {
+  padding-right: 98px;
+}
+
+.dossier-case-title {
+  font: bold 21px/1.15 'Courier New', Courier, monospace;
+  color: #1a130b;
+  margin: 0 0 6px;
+  letter-spacing: -0.3px;
+}
+
+.dossier-subject-meta {
+  font: 10px/1.3 'JetBrains Mono', monospace;
+  color: #473a2a;
+  margin-bottom: 9px;
+  font-weight: 500;
+}
+
+.dossier-case-desc {
+  font: 10.5px/1.45 'Courier New', Courier, monospace;
+  color: #382e22;
+  margin: 0;
+}
+
+/* Attached Polaroid Photograph overlapping the right edge */
+.dossier-polaroid-photo {
+  position: absolute;
+  right: -14px;
+  top: 26px;
+  width: 108px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.polaroid-frame {
+  background: #eee8d8;
+  padding: 5px 5px 12px;
+  border-radius: 1.5px;
+  box-shadow: 3px 10px 24px rgba(0, 0, 0, 0.85), 0 2px 6px rgba(0, 0, 0, 0.55);
+  transform: rotate(2.8deg);
+  border: 1px solid rgba(168, 153, 128, 0.65);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.polaroid-img {
+  width: 100%;
+  aspect-ratio: 1/1.05;
+  object-fit: cover;
+  filter: sepia(0.06) brightness(0.96) contrast(1.04);
+  display: block;
+}
+
+.polaroid-caption {
+  font: bold 8.5px/1 'Courier New', Courier, monospace;
+  letter-spacing: 1.4px;
+  color: #2c2217;
+  margin-top: 6px;
+  text-align: center;
+}
+
+/* Layer 6: Real Interactive ENTER INVESTIGATION ROOM CTA (Yellow Kraft Tape Strip) */
+.title-cta-wrapper {
+  width: 100%;
+  max-width: 352px;
+  margin-bottom: clamp(16px, 2.4vh, 24px);
+  z-index: 10;
+}
+
+.title-cta-strip {
+  width: 100%;
+  min-height: 52px;
+  background: linear-gradient(180deg, #d6b266 0%, #c19b4c 100%);
+  border: none;
+  border-radius: 2px;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.82), inset 0 1px 1.5px rgba(255, 255, 255, 0.38);
+  color: #1a1309;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 0 18px;
+  transform: rotate(-0.3deg);
+  transition: transform 0.18s ease, filter 0.18s ease;
+  touch-action: manipulation;
+}
+
+.title-cta-strip:hover {
+  filter: brightness(1.06);
+  transform: rotate(-0.3deg) scale(1.01);
+}
+
+.title-cta-strip:active {
+  transform: rotate(-0.3deg) scale(0.98);
+  filter: brightness(0.96);
+}
+
+.cta-folder-icon {
+  color: #1a1309;
+  flex-shrink: 0;
+}
+
+.cta-label {
+  font: bold 13px/1 'JetBrains Mono', monospace;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+}
+
+.cta-arrow-icon {
+  color: #1a1309;
+  flex-shrink: 0;
+}
+
+/* Layer 7: Restrained Bottom Tagline */
+.title-bottom-tagline {
+  font: 9.5px/1 'JetBrains Mono', monospace;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #92a4ba;
+  opacity: 0.85;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+  margin-top: 2px;
+}
+
+.title-reset-link {
+  background: none;
+  border: none;
+  font: 11px Georgia, serif;
+  color: #9aa8b8;
+  text-decoration: underline;
+  margin-top: 10px;
+  cursor: pointer;
+  opacity: 0.75;
+}
+
+/* Discreet Audio Control - Positioned at bottom corner so it never overlaps top text */
+.title-audio-toggle {
+  position: absolute;
+  bottom: calc(env(safe-area-inset-bottom, 16px) + 12px);
+  right: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(10, 16, 26, 0.65);
+  border: 1px solid rgba(175, 195, 220, 0.25);
+  border-radius: 12px;
+  padding: 5px 9px;
+  color: #c0cedf;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.2s ease;
+  z-index: 25;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+}
+
+.title-audio-toggle:hover {
+  background: rgba(18, 28, 44, 0.85);
+  border-color: rgba(175, 195, 220, 0.45);
+  color: #ffffff;
+  transform: scale(1.03);
+}
+
+.title-audio-toggle:active {
+  transform: scale(0.97);
+}
+
+.audio-toggle-label {
+  font: 8px/1 'JetBrains Mono', monospace;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: inherit;
+}
+
+.audio-icon-active {
+  color: #5eead4;
+}
+
+.audio-icon-muted {
+  color: #f87171;
+}
+
+
+

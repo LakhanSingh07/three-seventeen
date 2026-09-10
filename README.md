@@ -1,96 +1,33 @@
-# 3:17 — Mobile Mystery Investigation Game
+# 3:17 — Case 001 integrated environment
 
-> **"Every phone has a story."**
+Integrated React/Vite source, 24 environment images, canonical Case 001 assets and production build.
 
-**3:17** is an immersive, tactile mobile detective investigation game built with React, TypeScript, and Vite. Rather than presenting a generic puzzle or visual novel interface, **3:17** places players in the shoes of an investigator inspecting a recovered smartphone belonging to a vanished data analyst in the middle of a dark investigation room.
+**Review checkpoint, not a QA-approved handoff.** Browser access was blocked in the build environment. The seven requested app screenshots and interactive Android QA remain outstanding. Do not hand this to Antigravity until that review passes.
 
----
+## Run
 
-## 🔍 Game Experience & Architecture
+Use Node.js 22.12+ (verified build on Node.js 24.19.0).
 
-```
-INVESTIGATION ROOM
-  │
-  ├─── 2.5D INVESTIGATION DESK (Physical Interactive Props)
-  │     ├── Sarah's Recovered Phone (ITEM 01 in Evidence Sleeve)
-  │     ├── Manila Case Dossier (#001 — Confidentially Stamped)
-  │     ├── Investigator's Field Notebook (Spiral-bound Questions & Facts)
-  │     ├── City Transit & Surveillance Grid Map
-  │     ├── Micro-Cassette Audio Recorder & Wire
-  │     ├── Vintage Desk Lamp (Togglable Warm Tungsten Light Cone)
-  │     └── Official Accusation & Theory Report Folder
-  │
-  ├─── NOVA OS (Sarah's Fictional Smartphone Interface)
-  │     ├── Lock Screen (03:17 Ambient Clock, Incoming Notifications & Decrypt)
-  │     ├── Messages App (Conversations with Alex, Maya, Ryan, Daniel, Unknown)
-  │     ├── Photos / Gallery App (10 authentic personal photos + EXIF metadata)
-  │     ├── Call Logs & Voicemails (Suspicious calls & recordings)
-  │     ├── Transit Maps & Geolocation Pins
-  │     ├── Notes & Secret Journal Entries
-  │     └── Vault / Encrypted Files (Passcode-protected evidence)
-  │
-  └─── WALL-MOUNTED INVESTIGATION CORKBOARD
-        ├── Physical Pushpins & Red Thread Links
-        ├── Sparse Non-Spoiler State 0 Progression
-        ├── Dynamic Clue Connection & Contradiction Mechanic
-        └── Real-time Case Timeline Discovery
-```
-
----
-
-## ✨ Features
-
-- **No Card-Based UI Dashboard**: Built as an authentic 2.5D physical environment with natural prop overlaps, directional lighting, and realistic tactile lift interactions.
-- **Authoritative 42-Asset Visual Library**: Complete production assets including canonical character portraits, real personal phone gallery imagery, location and surveillance clues, NOVA wallpapers, and cinematic case art.
-- **Interactive Phone OS**: Explore Sarah's smartphone across Messages, Photos, Phone, Maps, Notes, Browser, Files, and Voice Memos.
-- **Procedural Acoustic Sound Engine**: Synthesized physical audio cues via the Web Audio API for desk lamp toggling, paper rustling, spiral notebook flipping, cassette clicks, corkboard pushpins, clue discoveries, and deduction fanfares with zero external audio file dependencies.
-- **Deduction & Contradiction System**: Connect two pieces of logged evidence on the physical corkboard to generate logical investigative insights.
-- **Accusation & Theory Builder**: File the final formal case report with suspect identification, motive, timeline evidence, and escape route.
-
----
-
-## 🛠️ Tech Stack
-
-- **Framework**: React 18 + TypeScript + Vite
-- **Styling**: Vanilla CSS with 2.5D perspective transforms, dynamic lighting overlays, and responsive mobile chassis container
-- **Audio**: Web Audio API procedural acoustic sound synthesizer
-- **Icons**: Lucide React
-- **Celebration Effects**: Canvas Confetti
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js (v18+)
-- npm / yarn / pnpm
-
-### Installation & Local Run
-
-```bash
-# Clone the repository
-git clone https://github.com/LakhanSingh07/three-seventeen.git
-
-# Navigate to project directory
-cd three-seventeen
-
-# Install dependencies
-npm install
-
-# Start local dev server
+```sh
+npm ci
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) in your browser.
+Open the URL printed by Vite. Select Case 001 and enter the investigation. Tap Sarah’s physical phone in the center of the desk. Close-ups have a Desk return control. Connect two discovered evidence pins on the wall board; use the notebook and case folder to review progress.
 
-### Building for Production
-
-```bash
+```sh
+npm test
+npm run lint
 npm run build
+npm run preview
 ```
 
----
+`dist/` includes the compiled application and assets. Serve it over HTTP; opening index.html via file:// is unsupported. This is a web project, not an Android APK. Android hardware-back behavior needs on-device browser/WebView verification.
 
-## 📜 License
+## Architecture and art
 
-Private & Confidential • Copyright (c) 2026. All rights reserved.
+The original scene layers, camera-controller API, prop hotspots, normalized coordinates, close-up system and CaseEngine remain. ProductionArt renders centrally registered artwork with alpha or vector silhouette masks. The master room plate supplies the wall, receding desk, window and ambient light; interactive props remain separate layers. Room layout uses a uniformly scaled 9:16 canvas with letterboxing on taller screens.
+
+The supplied Sarah, Alex, Maya, Ryan and Daniel assets and all other original Case 001 assets are preserved. The original case engine, types, save system and case data are unchanged.
+
+`review/` contains asset/provenance manifests, preservation audit, changed files, QA and build reports, test output, remaining TODOs and the exact manual review procedure. `review/screenshots/README.md` records why screenshots are absent.

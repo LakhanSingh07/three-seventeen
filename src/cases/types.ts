@@ -89,6 +89,10 @@ export interface CallLogItem {
   hasAudioVoicemail?: boolean;
   voicemailDuration?: string;
   voicemailTranscript?: string;
+  voicemailAudioSrc?: string;
+  hasRecoveredAudio?: boolean;
+  recoveredAudioSrc?: string;
+  recoveredAudioDurationSec?: number;
   clueEvidenceId?: string;
 }
 
@@ -131,13 +135,23 @@ export interface FileItem {
   id: string;
   name: string;
   size: string;
-  type: 'pdf' | 'text' | 'archive' | 'audio' | 'image';
+  type: 'pdf' | 'text' | 'archive' | 'audio' | 'image' | 'video';
   modified: string;
   contentPreview?: string;
   isEncrypted?: boolean;
   decryptionHint?: string;
   downloadUrl?: string;
   clueEvidenceId?: string;
+  isRecovered?: boolean;
+  audioSrc?: string;
+  audioDurationSec?: number;
+  videoSrc?: string;
+  videoDurationSec?: number;
+  isCctvArchive?: boolean;
+  unlockPrerequisites?: string[];
+  isSecurityArchive?: boolean;
+  isLocker28Archive?: boolean;
+  isV17Archive?: boolean;
 }
 
 export interface EvidenceItem {

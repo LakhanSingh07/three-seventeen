@@ -1,0 +1,122 @@
+{
+  "room_background": {
+    "prompt": "Master room visual canon",
+    "source_generation": "exec-97731703-c597-4386-b865-d0168c4dea32.png",
+    "integrated_path": "public/assets/env/room_background.webp"
+  },
+  "board_base": {
+    "prompt": "Production game asset board_base. Reference image 1 is the MASTER room lighting/material/perspective canon, do not reproduce the room. Generate ONLY: A single EMPTY wall mounted evidence board, 6:5 landscape, dark natural cork with coarse tactile fibers and slender aged dark walnut frame. Straight-on frontal wall plane, subtle warm lower-left spill and cool right rim. Entire rectangular frame visible nearly fills image. No pins, photos, paper, writing or string. Opaque board surface; transparent outside frame. Photoreal physical prop, muted premium commercial detective game, warm tungsten light from upper-left with cool night ambient from right. Actual transparent alpha background outside the object, no checkerboard, no solid backdrop, no text, no UI, no extra objects, fully intact silhouette, contact shadow subtle only. Match master canon, never cartoon or stylized icon.",
+    "source_generation": "exec-1de2ea2c-79b7-4027-9271-1aff0b794384.png",
+    "integrated_path": "public/assets/env/board_base.webp"
+  },
+  "desk_lamp_on": {
+    "prompt": "Background removal, foreground unchanged.",
+    "source_generation": "exec-09d01dd0-97ba-4fed-ab0d-97ec352e01f1.png",
+    "integrated_path": "public/assets/env/desk_lamp_on.webp"
+  },
+  "nova_phone": {
+    "prompt": "Background removal, foreground unchanged.",
+    "source_generation": "exec-6d6a4bd6-885e-4ac5-9a97-ca01a98c424e.png",
+    "integrated_path": "public/assets/env/nova_phone.webp"
+  },
+  "case_folder_closed": {
+    "prompt": "Background removal, foreground unchanged.",
+    "source_generation": "exec-dd425abd-46ad-4cda-a1aa-302846091e0a.png",
+    "integrated_path": "public/assets/env/case_folder_closed.webp"
+  },
+  "notebook_closed": {
+    "prompt": "Production game prop notebook_closed. Image 1 is master room style and light reference ONLY. Single closed pocket notebook, worn dark olive-black cloth hardcover with subtle stitched spine and cream page edges, a narrow tan fabric bookmark. 3:4 portrait, flat on desk plane viewed from above 55 degrees, nearly vertical long axis, full silhouette. Match the master room: tungsten warm light upper left and cool nighttime fill right, photoreal tactile restrained materials, no fake distress excess. Isolate on actual transparent background, no checkerboard illustration. Full object centered with 4% margin. No desk or room included. No UI or decorative labels. Retain natural scale perspective suitable for desk compositing.",
+    "source_generation": "exec-e96a4603-44d7-4ae7-87be-c3c175018b36.png",
+    "integrated_path": "public/assets/env/notebook_closed.webp"
+  },
+  "city_map_folded": {
+    "prompt": "Production game prop city_map_folded. Image 1 is master room style and light reference ONLY. Single folded thick ivory paper city street map, broad small-scale abstract fine grey street lines and desaturated blue river, no readable place names, no labels or markers. 5:4 landscape, flat on desk viewed 55 degrees above, realistic folded edges. No text. Match the master room: tungsten warm light upper left and cool nighttime fill right, photoreal tactile restrained materials, no fake distress excess. Isolate on actual transparent background, no checkerboard illustration. Full object centered with 4% margin. No desk or room included. No UI or decorative labels. Retain natural scale perspective suitable for desk compositing.",
+    "source_generation": "exec-52ad3aa8-8c38-4bc5-bf96-7a6618d152e3.png",
+    "integrated_path": "public/assets/env/city_map_folded.webp"
+  },
+  "audio_recorder": {
+    "prompt": "Production game prop audio_recorder. Image 1 is master room style and light reference ONLY. Single compact horizontal handheld tape audio recorder, charcoal black metal with silver tactile playback buttons, cassette window, recessed small speaker grille, blank display, no readable text, no logos. 13:8 landscape, resting flat viewed from above 55 degrees, subtle perspective. Match the master room: tungsten warm light upper left and cool nighttime fill right, photoreal tactile restrained materials, no fake distress excess. Isolate on actual transparent background, no checkerboard illustration. Full object centered with 4% margin. No desk or room included. No UI or decorative labels. Retain natural scale perspective suitable for desk compositing.",
+    "source_generation": "exec-4d298f89-6218-4582-b0f6-9d84fdfbb7c0.png",
+    "integrated_path": "public/assets/env/audio_recorder.webp"
+  },
+  "headphones": {
+    "prompt": "Production game prop headphones. Image 1 is master room style and light reference ONLY. Single pair of worn compact over-ear black leather wired headphones resting flat, folded earpads facing up, loosely coiled short cable, 4:3 landscape, viewed downward 55 degrees. Entire silhouette visible. Match the master room: tungsten warm light upper left and cool nighttime fill right, photoreal tactile restrained materials, no fake distress excess. Isolate on actual transparent background, no checkerboard illustration. Full object centered with 4% margin. No desk or room included. No UI or decorative labels. Retain natural scale perspective suitable for desk compositing.",
+    "source_generation": "exec-18e54311-dc73-42f9-bae2-37ae2d668bed.png",
+    "integrated_path": "public/assets/env/headphones.webp"
+  },
+  "coffee_mug": {
+    "prompt": "Production game prop coffee_mug. Image 1 is master room style and light reference ONLY. Single small off-white ceramic coffee mug half filled with dark coffee, ring stained lip, handle to right, realistic glazed porcelain. 1:1 square viewed downward 55 degrees, entire silhouette. Match the master room: tungsten warm light upper left and cool nighttime fill right, photoreal tactile restrained materials, no fake distress excess. Isolate on actual transparent background, no checkerboard illustration. Full object centered with 4% margin. No desk or room included. No UI or decorative labels. Retain natural scale perspective suitable for desk compositing.",
+    "source_generation": "exec-3328cddd-cd74-49fd-8258-e46bf224b225.png",
+    "integrated_path": "public/assets/env/coffee_mug.webp"
+  },
+  "evidence_bag": {
+    "prompt": "Production game prop evidence_bag. Image 1 is master room style and light reference ONLY. Single frosted translucent empty evidence sleeve made of slightly crinkled polyethylene with zip seal on top and a BLANK small cream label. 3:4 portrait, flat viewed downward 55 degrees, no items inside, no markings. Match the master room: tungsten warm light upper left and cool nighttime fill right, photoreal tactile restrained materials, no fake distress excess. Isolate on actual transparent background, no checkerboard illustration. Full object centered with 4% margin. No desk or room included. No UI or decorative labels. Retain natural scale perspective suitable for desk compositing.",
+    "source_generation": "exec-060f418a-c1fa-43f5-a587-edbe8914e0d0.png",
+    "integrated_path": "public/assets/env/evidence_bag.webp"
+  },
+  "desk_surface": {
+    "prompt": "Production state variant desk_surface. Image 1 is exact design reference. Generate a close-up opaque rectangular wood texture plate filling entire 16:10 image edge to edge of exactly the lower WALNUT desk surface in reference 1. Same grain, warm left tungsten and cool right night lighting. Empty, no objects. No surrounding wall, no perspective change. Preserve premium photoreal materials, warm tungsten upper-left/cool night right lighting. No extra objects, no room background, no UI, no checkerboard. Match object identity across variants.",
+    "source_generation": "exec-99729865-aab3-4608-9ca1-95dd5999ebe9.png",
+    "integrated_path": "public/assets/env/desk_surface.webp"
+  },
+  "desk_lamp_off": {
+    "prompt": "Production state variant desk_lamp_off. Image 1 is exact design reference. Same EXACT lamp, identical camera, framing and geometry, but bulb OFF. Cool ambient illumination with a faint residual warm room reflection. Isolated cutout with transparent background. Preserve premium photoreal materials, warm tungsten upper-left/cool night right lighting. No extra objects, no room background, no UI, no checkerboard. Match object identity across variants.",
+    "source_generation": "exec-f50f64aa-3215-4e57-83e5-c36b3131413c.png",
+    "integrated_path": "public/assets/env/desk_lamp_off.webp"
+  },
+  "case_folder_open": {
+    "prompt": "Production state variant case_folder_open. Image 1 is exact design reference. Same manila folder, open with left cover lying to the left and two ivory blank paper sheets held by small paperclip on right inside cover. 5:4 landscape, gentle perspective from above, all sheet and folder corners visible. No writing. Transparent background. Preserve premium photoreal materials, warm tungsten upper-left/cool night right lighting. No extra objects, no room background, no UI, no checkerboard. Match object identity across variants.",
+    "source_generation": "exec-df89a57d-9d2f-4b4b-8a1a-0784a9b1b1dd.png",
+    "integrated_path": "public/assets/env/case_folder_open.webp"
+  },
+  "notebook_open": {
+    "prompt": "Production state variant notebook_open. Image 1 is exact design reference. Same EXACT dark cloth notebook now lying open to a blank two-page cream paper spread, faint horizontal pencil rules, sewn central gutter, small ribbon marker lower edge. 4:3 landscape, downward 55 degree camera, no writing or symbols, transparent background. Preserve premium photoreal materials, warm tungsten upper-left/cool night right lighting. No extra objects, no room background, no UI, no checkerboard. Match object identity across variants.",
+    "source_generation": "exec-f1360d4b-1b35-4141-a0ee-106b811cc295.png",
+    "integrated_path": "public/assets/env/notebook_open.webp"
+  },
+  "city_map_partial": {
+    "prompt": "Production state variant city_map_partial. Image 1 is exact design reference. Same EXACT ivory street map and grey blue river now HALF unfolded with two broad accordion panels visible and one raised fold. 4:3 landscape. Identical paper, lighting and perspective. No text, markers or names. Transparent background. Preserve premium photoreal materials, warm tungsten upper-left/cool night right lighting. No extra objects, no room background, no UI, no checkerboard. Match object identity across variants.",
+    "source_generation": "exec-39ff0070-f842-446a-a671-cefebb20d382.png",
+    "integrated_path": "public/assets/env/city_map_partial.webp"
+  },
+  "city_map_unfolded": {
+    "prompt": "Production state variant city_map_unfolded. Image 1 is exact design reference. Same EXACT ivory paper city street map completely unfolded flat in 4:3 landscape with a grey-blue river and fine abstract grey street lines. Fully visible rectangular edges with tiny natural wear, subtle fold creases, no names or markers or text. Slight downward perspective, same lighting. Transparent background. Preserve premium photoreal materials, warm tungsten upper-left/cool night right lighting. No extra objects, no room background, no UI, no checkerboard. Match object identity across variants.",
+    "source_generation": "exec-b86764f6-7c19-4978-914d-637359292762.png",
+    "integrated_path": "public/assets/env/city_map_unfolded.webp"
+  },
+  "loose_paper_stack": {
+    "source_generation": "exec-e603a9b4-8a5e-465a-bfaf-209521376dbf.png",
+    "brief": "Derived from the master room canon. Warm upper-left tungsten and cool right ambient. Physical paper or desk prop, no clue text.",
+    "integrated_path": "public/assets/env/loose_paper_stack.webp"
+  },
+  "loose_paper_single": {
+    "source_generation": "exec-5fec1f70-0d55-442a-8763-38cb5ca898ea.png",
+    "brief": "Derived from the master room canon. Warm upper-left tungsten and cool right ambient. Physical paper or desk prop, no clue text.",
+    "integrated_path": "public/assets/env/loose_paper_single.webp"
+  },
+  "pen": {
+    "source_generation": "exec-41849bda-be7a-4799-88d2-dbc7f1f077ad.png",
+    "brief": "Derived from the master room canon. Warm upper-left tungsten and cool right ambient. Physical paper or desk prop, no clue text.",
+    "integrated_path": "public/assets/env/pen.webp"
+  },
+  "pin_frame_polaroid": {
+    "source_generation": "exec-a967bbd9-ac62-489a-8e69-c35b128ac776.png",
+    "brief": "Derived from the master room canon. Warm upper-left tungsten and cool right ambient. Physical paper or desk prop, no clue text.",
+    "integrated_path": "public/assets/env/pin_frame_polaroid.webp"
+  },
+  "pin_frame_index": {
+    "source_generation": "exec-5f387636-9cc9-4b11-801f-9528009b3214.png",
+    "brief": "Derived from the master room canon. Warm upper-left tungsten and cool right ambient. Physical paper or desk prop, no clue text.",
+    "integrated_path": "public/assets/env/pin_frame_index.webp"
+  },
+  "pin_frame_note": {
+    "source_generation": "exec-d016f13b-3fd4-4cf0-82a0-c78428773e14.png",
+    "brief": "Derived from the master room canon. Warm upper-left tungsten and cool right ambient. Physical paper or desk prop, no clue text.",
+    "integrated_path": "public/assets/env/pin_frame_note.webp"
+  },
+  "pin_frame_print": {
+    "source_generation": "exec-a89b7eb4-c25e-4755-abf4-91907150be70.png",
+    "brief": "Derived from the master room canon. Warm upper-left tungsten and cool right ambient. Physical paper or desk prop, no clue text.",
+    "integrated_path": "public/assets/env/pin_frame_print.webp"
+  }
+}

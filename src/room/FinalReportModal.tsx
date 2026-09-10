@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { X, FileSpreadsheet, CheckCircle2, AlertTriangle } from 'lucide-react';
 import type { CaseData, AccusationTheory, CaseSaveState } from '../cases/types';
 import { soundEngine } from '../system/SoundEngine';
 import { hapticEngine } from '../system/HapticEngine';
+import { environmentAssets } from '../scene/assetRegistry';
 
 interface FinalReportModalProps {
   caseData: CaseData;
@@ -39,7 +39,7 @@ export const FinalReportModal: React.FC<FinalReportModalProps> = ({
     if (selectedEvidenceIds.length < 3) {
       soundEngine.playWrongAccusation();
       hapticEngine.heavy();
-      setValidationError('You must select at least 3 supporting pieces of evidence to validate this theory in court.');
+      setValidationError('You must attach at least 3 supporting pieces of evidence to validate this charge.');
       return;
     }
 
@@ -61,93 +61,71 @@ export const FinalReportModal: React.FC<FinalReportModalProps> = ({
         position: 'fixed',
         inset: 0,
         zIndex: 160,
-        background: 'rgba(4, 6, 12, 0.92)',
-        backdropFilter: 'blur(16px)',
+        background: 'rgba(5, 4, 3, 0.88)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         padding: '16px',
-        animation: 'fadeIn 0.25s ease',
+        animation: 'fadeIn 0.22s ease-out',
+        userSelect: 'none',
       }}
       onClick={onClose}
     >
       <div
         onClick={(e) => e.stopPropagation()}
+        className="paper-sheet dossier-sheet"
         style={{
           width: '100%',
-          maxWidth: '640px',
-          maxHeight: '90vh',
-          background: 'linear-gradient(145deg, #1e2532 0%, #11151e 100%)',
-          borderRadius: '16px',
-          border: '1px solid rgba(239, 68, 68, 0.35)',
-          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.95), 0 0 20px rgba(239, 68, 68, 0.15)',
+          maxWidth: '560px',
+          maxHeight: '92vh',
+          overflowY: 'auto',
           display: 'flex',
           flexDirection: 'column',
-          overflow: 'hidden',
           position: 'relative',
+          padding: '24px 22px',
+          boxShadow: '0 20px 50px rgba(0, 0, 0, 0.9)',
+          backgroundImage: `url(${environmentAssets.clutter.paperSingle.real})`,
         }}
       >
-        <div
-          style={{
-            padding: '16px 20px',
-            background: 'linear-gradient(to right, #7f1d1d, #450a0a)',
-            borderBottom: '1px solid rgba(239, 68, 68, 0.3)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <FileSpreadsheet size={20} color="#fca5a5" />
+        {/* Header: Official Police / Investigation Docket */}
+        <header style={{ borderBottom: '1px solid rgba(136, 118, 89, 0.45)', paddingBottom: '12px', marginBottom: '14px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
-              <div style={{ fontSize: '11px', fontWeight: 800, color: '#fecaca', letterSpacing: '1.5px', textTransform: 'uppercase' }}>
-                FINAL THEORY REPORT • CASE 001
-              </div>
-              <div style={{ fontSize: '15px', fontWeight: 700, color: '#ffffff', marginTop: '1px' }}>
-                Official Investigative Case Conclusion
-              </div>
+              <small style={{ font: '9px/1.4 monospace', letterSpacing: '1.5px', color: '#68543d', display: 'block' }}>
+                CASE {caseData.caseNumber} · SPECIAL INVESTIGATION BRANCH
+              </small>
+              <h1 style={{ font: '24px/1.15 Georgia, serif', color: '#271b10', margin: '4px 0 2px' }}>
+                Official Charge Docket
+              </h1>
+              <p style={{ font: 'italic 12px Georgia, serif', color: '#54412c', margin: 0 }}>
+                In re: Disappearance of {caseData.victimName}, Age {caseData.victimAge}
+              </p>
             </div>
+            <span
+              style={{
+                font: '10px/1 monospace',
+                letterSpacing: '1px',
+                color: '#8b1e16',
+                border: '1.5px solid #8b1e16',
+                padding: '3px 8px',
+                transform: 'rotate(-4deg)',
+                fontWeight: 'bold',
+                flexShrink: 0,
+              }}
+            >
+              INDICTMENT
+            </span>
           </div>
+        </header>
 
-          <button
-            onClick={() => {
-              soundEngine.playPaperRustle();
-              hapticEngine.light();
-              onClose();
-            }}
-            style={{
-              background: 'rgba(0, 0, 0, 0.3)',
-              border: 'none',
-              borderRadius: '50%',
-              width: '32px',
-              height: '32px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#fecaca',
-              cursor: 'pointer',
-            }}
-          >
-            <X size={18} />
-          </button>
-        </div>
-
-        <div
-          style={{
-            padding: '20px 24px',
-            overflowY: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '18px',
-            color: '#e2e8f0',
-            fontSize: '13px',
-          }}
-        >
+        {/* Form Body */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', fontSize: '13px', color: '#3b2b1b' }}>
+          {/* Section 1: Primary Suspect */}
           <div>
-            <label style={{ display: 'block', fontSize: '11px', fontWeight: 800, color: '#fca5a5', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '8px' }}>
-              1. Primary Responsible Party (Who intercepted Sarah?)
+            <label style={{ display: 'block', font: 'bold 10.5px/1 monospace', letterSpacing: '1px', color: '#7a5a3a', textTransform: 'uppercase', marginBottom: '8px' }}>
+              1. Principal Accused / Responsible Party
             </label>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '8px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: '8px' }}>
               {caseData.characters.map((c) => {
                 const isSelected = suspectId === c.id;
                 return (
@@ -159,77 +137,93 @@ export const FinalReportModal: React.FC<FinalReportModalProps> = ({
                       setSuspectId(c.id);
                     }}
                     style={{
-                      background: isSelected ? 'rgba(239, 68, 68, 0.25)' : 'rgba(255, 255, 255, 0.04)',
-                      border: isSelected ? '2px solid #ef4444' : '1px solid rgba(255, 255, 255, 0.08)',
-                      borderRadius: '8px',
-                      padding: '8px',
+                      background: isSelected ? '#322214' : 'rgba(160, 138, 102, 0.12)',
+                      border: isSelected ? '1.5px solid #8b1e16' : '1px solid rgba(136, 118, 89, 0.35)',
+                      borderRadius: '2px',
+                      padding: '8px 6px',
                       display: 'flex',
                       flexDirection: 'column',
                       alignItems: 'center',
-                      gap: '6px',
+                      gap: '4px',
                       cursor: 'pointer',
                       textAlign: 'center',
+                      boxShadow: isSelected ? '0 3px 8px rgba(0,0,0,0.4)' : 'none',
                     }}
                   >
                     <img
                       src={c.avatar}
                       alt={c.name}
-                      style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }}
+                      style={{
+                        width: '36px',
+                        height: '36px',
+                        borderRadius: '2px',
+                        objectFit: 'cover',
+                        filter: isSelected ? 'none' : 'grayscale(0.35) sepia(0.2)',
+                      }}
                     />
-                    <div style={{ fontSize: '11.5px', fontWeight: 700, color: isSelected ? '#fca5a5' : '#ffffff' }}>
+                    <div style={{ font: 'bold 11px Georgia, serif', color: isSelected ? '#f5eedb' : '#322315' }}>
                       {c.name}
                     </div>
-                    <div style={{ fontSize: '9.5px', color: '#94a3b8' }}>{c.role}</div>
+                    <div style={{ font: '9px monospace', color: isSelected ? '#c4b59b' : '#705b42' }}>
+                      {c.role}
+                    </div>
                   </button>
                 );
               })}
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+          {/* Section 2 & 3: Location & Time */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             <div>
-              <label style={{ display: 'block', fontSize: '11px', fontWeight: 800, color: '#fca5a5', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '6px' }}>
-                2. Key Scene (Where?)
+              <label style={{ display: 'block', font: 'bold 10px/1 monospace', letterSpacing: '1px', color: '#7a5a3a', textTransform: 'uppercase', marginBottom: '5px' }}>
+                2. Key Scene / Crime Site
               </label>
               <select
                 value={locationId}
-                onChange={(e) => setLocationId(e.target.value)}
+                onChange={(e) => {
+                  soundEngine.playTap();
+                  setLocationId(e.target.value);
+                }}
                 style={{
                   width: '100%',
-                  background: '#090b10',
-                  border: '1px solid rgba(255, 255, 255, 0.15)',
-                  borderRadius: '8px',
-                  padding: '10px 12px',
-                  color: '#ffffff',
-                  fontSize: '12px',
-                  fontWeight: 600,
+                  background: '#eae0c8',
+                  border: '1px solid #9c8a6f',
+                  borderRadius: '2px',
+                  padding: '7px 8px',
+                  color: '#2a1d12',
+                  font: '11px Georgia, serif',
                   outline: 'none',
+                  cursor: 'pointer',
                 }}
               >
                 <option value="loc-riverside">Riverside Overlook (Last Signal)</option>
                 <option value="loc-station">Central Station (Locker 28)</option>
                 <option value="loc-bluebird">Bluebird Cafe (4th Ave)</option>
-                <option value="loc-apartment">Sarah\'s Apartment</option>
+                <option value="loc-apartment">Sarah's Apartment</option>
               </select>
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '11px', fontWeight: 800, color: '#fca5a5', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '6px' }}>
-                3. Critical Time (When?)
+              <label style={{ display: 'block', font: 'bold 10px/1 monospace', letterSpacing: '1px', color: '#7a5a3a', textTransform: 'uppercase', marginBottom: '5px' }}>
+                3. Critical Event Timestamp
               </label>
               <select
                 value={criticalTime}
-                onChange={(e) => setCriticalTime(e.target.value)}
+                onChange={(e) => {
+                  soundEngine.playTap();
+                  setCriticalTime(e.target.value);
+                }}
                 style={{
                   width: '100%',
-                  background: '#090b10',
-                  border: '1px solid rgba(255, 255, 255, 0.15)',
-                  borderRadius: '8px',
-                  padding: '10px 12px',
-                  color: '#ffffff',
-                  fontSize: '12px',
-                  fontWeight: 600,
+                  background: '#eae0c8',
+                  border: '1px solid #9c8a6f',
+                  borderRadius: '2px',
+                  padding: '7px 8px',
+                  color: '#2a1d12',
+                  font: '11px Georgia, serif',
                   outline: 'none',
+                  cursor: 'pointer',
                 }}
               >
                 <option value="03:17 AM">03:17 AM (The Locker Call)</option>
@@ -240,23 +234,27 @@ export const FinalReportModal: React.FC<FinalReportModalProps> = ({
             </div>
           </div>
 
+          {/* Section 4: Motive & Modus Operandi */}
           <div>
-            <label style={{ display: 'block', fontSize: '11px', fontWeight: 800, color: '#fca5a5', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '6px' }}>
-              4. Core Motive & Sequence (Why / What happened?)
+            <label style={{ display: 'block', font: 'bold 10px/1 monospace', letterSpacing: '1px', color: '#7a5a3a', textTransform: 'uppercase', marginBottom: '5px' }}>
+              4. Motive & Theory of the Crime
             </label>
             <select
               value={keyActionMotive}
-              onChange={(e) => setKeyActionMotive(e.target.value)}
+              onChange={(e) => {
+                soundEngine.playTap();
+                setKeyActionMotive(e.target.value);
+              }}
               style={{
                 width: '100%',
-                background: '#090b10',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
-                borderRadius: '8px',
-                padding: '10px 12px',
-                color: '#ffffff',
-                fontSize: '12px',
-                fontWeight: 600,
+                background: '#eae0c8',
+                border: '1px solid #9c8a6f',
+                borderRadius: '2px',
+                padding: '7px 8px',
+                color: '#2a1d12',
+                font: '11px Georgia, serif',
                 outline: 'none',
+                cursor: 'pointer',
               }}
             >
               <option value="corporate_interception">
@@ -274,27 +272,28 @@ export const FinalReportModal: React.FC<FinalReportModalProps> = ({
             </select>
           </div>
 
+          {/* Section 5: Evidence Exhibits Checklist */}
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-              <label style={{ fontSize: '11px', fontWeight: 800, color: '#fca5a5', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
-                5. Select Supporting Evidence ({selectedEvidenceIds.length}/3 min)
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+              <label style={{ font: 'bold 10px/1 monospace', letterSpacing: '1px', color: '#7a5a3a', textTransform: 'uppercase' }}>
+                5. Attached Physical Exhibits ({selectedEvidenceIds.length}/3 min)
               </label>
-              <span style={{ fontSize: '11px', color: '#94a3b8' }}>
-                {saveState.discoveredEvidenceIds.length} Discovered
+              <span style={{ font: '9px monospace', color: '#887358' }}>
+                {saveState.discoveredEvidenceIds.length} logged to file
               </span>
             </div>
 
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                gap: '6px',
-                maxHeight: '160px',
+                gridTemplateColumns: '1fr',
+                gap: '5px',
+                maxHeight: '140px',
                 overflowY: 'auto',
                 padding: '4px',
-                background: 'rgba(0, 0, 0, 0.3)',
-                borderRadius: '8px',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
+                background: 'rgba(160, 138, 102, 0.12)',
+                border: '1px solid rgba(136, 118, 89, 0.35)',
+                borderRadius: '2px',
               }}
             >
               {saveState.discoveredEvidenceIds.map((evId) => {
@@ -305,12 +304,13 @@ export const FinalReportModal: React.FC<FinalReportModalProps> = ({
                 return (
                   <button
                     key={evId}
+                    type="button"
                     onClick={() => toggleEvidence(evId)}
                     style={{
-                      padding: '8px 10px',
-                      borderRadius: '6px',
-                      background: isSelected ? 'rgba(239, 68, 68, 0.2)' : 'rgba(255, 255, 255, 0.03)',
-                      border: isSelected ? '1px solid #ef4444' : '1px solid rgba(255, 255, 255, 0.06)',
+                      padding: '6px 10px',
+                      background: isSelected ? '#dfcfab' : 'transparent',
+                      border: isSelected ? '1px solid #7c5c37' : '1px solid transparent',
+                      borderRadius: '2px',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '8px',
@@ -318,23 +318,25 @@ export const FinalReportModal: React.FC<FinalReportModalProps> = ({
                       textAlign: 'left',
                     }}
                   >
-                    <div
+                    <span
                       style={{
-                        width: '16px',
-                        height: '16px',
-                        borderRadius: '4px',
-                        border: isSelected ? '1px solid #ef4444' : '1px solid #64748b',
-                        background: isSelected ? '#ef4444' : 'transparent',
+                        width: '14px',
+                        height: '14px',
+                        border: '1px solid #6b533b',
+                        background: isSelected ? '#8b1e16' : '#f5eedb',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
+                        color: '#f5eedb',
+                        fontSize: '9px',
+                        fontWeight: 'bold',
                         flexShrink: 0,
                       }}
                     >
-                      {isSelected && <CheckCircle2 size={12} color="#ffffff" />}
-                    </div>
-                    <span style={{ fontSize: '11px', fontWeight: 600, color: isSelected ? '#ffffff' : '#cbd5e1' }}>
-                      {ev.title}
+                      {isSelected ? '✓' : ''}
+                    </span>
+                    <span style={{ font: '11px Georgia, serif', color: '#302214' }}>
+                      {ev.title} <small style={{ font: '9px monospace', color: '#725e46' }}>({ev.sourceApp})</small>
                     </span>
                   </button>
                 );
@@ -342,58 +344,52 @@ export const FinalReportModal: React.FC<FinalReportModalProps> = ({
             </div>
           </div>
 
+          {/* Validation Error Message */}
           {validationError && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 12px', background: 'rgba(239, 68, 68, 0.15)', borderRadius: '6px', border: '1px solid #ef4444' }}>
-              <AlertTriangle size={16} color="#f87171" />
-              <span style={{ fontSize: '11.5px', color: '#fca5a5' }}>{validationError}</span>
+            <div
+              style={{
+                padding: '8px 10px',
+                background: '#f8d7da',
+                border: '1px solid #f5c6cb',
+                color: '#721c24',
+                font: 'italic 12px Georgia, serif',
+                borderRadius: '2px',
+              }}
+            >
+              {validationError}
             </div>
           )}
         </div>
 
-        <div
+        {/* Footer Actions */}
+        <footer
           style={{
-            padding: '14px 20px',
-            background: 'rgba(10, 14, 22, 0.95)',
-            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+            borderTop: '1px solid rgba(136, 118, 89, 0.45)',
+            paddingTop: '14px',
+            marginTop: '16px',
             display: 'flex',
-            alignItems: 'center',
             justifyContent: 'space-between',
+            alignItems: 'center',
           }}
         >
           <button
+            className="paper-action"
             onClick={() => {
               soundEngine.playPaperRustle();
               onClose();
             }}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: '#94a3b8',
-              fontSize: '12px',
-              cursor: 'pointer',
-            }}
           >
-            Cancel
+            ‹ Return to desk
           </button>
 
           <button
+            className="report-stamp"
             onClick={handleFormSubmit}
-            style={{
-              background: 'linear-gradient(135deg, #dc2626, #b91c1c)',
-              border: '1px solid #f87171',
-              color: '#ffffff',
-              padding: '9px 20px',
-              borderRadius: '8px',
-              fontSize: '12px',
-              fontWeight: 800,
-              letterSpacing: '0.5px',
-              cursor: 'pointer',
-              boxShadow: '0 4px 15px rgba(220, 38, 38, 0.4)',
-            }}
+            style={{ margin: 0 }}
           >
-            FILE CASE REPORT & ACCUSATION
+            FILE CHARGES WITH DISTRICT ATTORNEY ↗
           </button>
-        </div>
+        </footer>
       </div>
     </div>
   );

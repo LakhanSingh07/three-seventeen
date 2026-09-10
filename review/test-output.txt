@@ -1,0 +1,46 @@
+
+> three-seventeen@0.0.0 test
+> node scripts/check-case.mjs
+
+PASS Case 001 references are internally valid
+PASS New case exposes no discovered evidence or deductions
+PASS Evidence pair unlocks DED_ALEX_ALIBI
+PASS Duplicate deduction rejected: DED_ALEX_ALIBI
+PASS Evidence pair unlocks DED_LOCKER_OPERATION
+PASS Duplicate deduction rejected: DED_LOCKER_OPERATION
+PASS Evidence pair unlocks DED_THE_BLACKMAIL_THREAT
+PASS Duplicate deduction rejected: DED_THE_BLACKMAIL_THREAT
+PASS Evidence pair unlocks DED_THE_RIVERSIDE_PURSUIT
+PASS Duplicate deduction rejected: DED_THE_RIVERSIDE_PURSUIT
+PASS Unrelated pair does not unlock a deduction
+PASS Evidence/deductions survive a save/load round trip
+PASS Correct completed theory reaches canonical true ending
+PASS Wrong suspect reaches canonical wrong ending
+PASS Room progression covers all four stages
+PASS Exactly 24 unique registry assets
+PASS Valid WebP container: ENV-ROOM-01
+PASS Valid WebP container: BOARD-BASE-01
+PASS Valid WebP container: DESK-SURFACE-01
+PASS Valid WebP container: DESK-LAMP-01
+PASS Valid WebP container: DESK-LAMP-02
+PASS Valid WebP container: PROP-PHONE-01
+PASS Valid WebP container: PROP-CASEFOLDER-CLOSED
+PASS Valid WebP container: PROP-CASEFOLDER-OPEN
+PASS Valid WebP container: PROP-NOTEBOOK-CLOSED
+PASS Valid WebP container: PROP-NOTEBOOK-OPEN
+PASS Valid WebP container: PROP-MAP-FOLDED
+PASS Valid WebP container: PROP-MAP-PARTIAL
+PASS Valid WebP container: PROP-MAP-UNFOLDED
+PASS Valid WebP container: PROP-RECORDER-01
+PASS Valid WebP container: PROP-HEADPHONES-01
+PASS Valid WebP container: PROP-EVIDENCEBAG-01
+PASS Valid WebP container: PROP-MUG-01
+PASS Valid WebP container: PROP-PAPERS-01
+PASS Valid WebP container: PROP-PAPERS-02
+PASS Valid WebP container: PROP-PAPERS-03
+PASS Valid WebP container: BOARD-PIN-FRAME-01
+PASS Valid WebP container: BOARD-PIN-FRAME-02
+PASS Valid WebP container: BOARD-PIN-FRAME-03
+PASS Valid WebP container: BOARD-PIN-FRAME-04
+
+40 checks passed. This is a data/asset regression check, not browser or Android QA.

@@ -6,12 +6,14 @@ import { hapticEngine } from '../system/HapticEngine';
 
 interface ContactsAppProps {
   caseData: CaseData;
+  discoveredEvidenceIds?: string[];
   onOpenAppWithParticipant: (participantId: string) => void;
   onBackToHome: () => void;
 }
 
 export const ContactsApp: React.FC<ContactsAppProps> = ({
   caseData,
+  discoveredEvidenceIds = [],
   onOpenAppWithParticipant,
   onBackToHome,
 }) => {
@@ -214,6 +216,82 @@ export const ContactsApp: React.FC<ContactsAppProps> = ({
               <span style={{ color: '#94a3b8', fontSize: '10px', fontWeight: 700 }}>INVESTIGATIVE DOSSIER</span>
               <p style={{ color: '#cbd5e1', lineHeight: '1.5', marginTop: '3px' }}>{selectedContact.bio}</p>
             </div>
+
+            {selectedContact.id === 'ryan' && discoveredEvidenceIds.includes('EVID-RYAN-VM-001') && (
+              <div
+                style={{
+                  marginTop: '6px',
+                  padding: '12px',
+                  background: 'rgba(56, 189, 248, 0.08)',
+                  borderRadius: '10px',
+                  border: '1px solid rgba(56, 189, 248, 0.25)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '8px',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#38bdf8', fontSize: '10.5px', fontWeight: 700, letterSpacing: '0.6px' }}>
+                  <span>INVESTIGATIVE OBSERVATIONS (VOICEMAIL RYAN-VM-001)</span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '11px', color: '#f1f5f9' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{ color: '#38bdf8' }}>•</span>
+                    <span>KNOWS ABOUT DATA DISCREPANCIES</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{ color: '#38bdf8' }}>•</span>
+                    <span>REQUESTED OFF-CHANNEL COMMUNICATION</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{ color: '#38bdf8' }}>•</span>
+                    <span>WARNED SARAH ABOUT AUDIT FOLDER</span>
+                  </div>
+                </div>
+                <div style={{ fontSize: '9.5px', color: '#94a3b8', fontStyle: 'italic', marginTop: '2px' }}>
+                  Verified factual observations. Proves knowledge, not guilt.
+                </div>
+              </div>
+            )}
+
+            {selectedContact.id === 'daniel' && discoveredEvidenceIds.includes('EVID-DANIEL-INT-001') && (
+              <div
+                style={{
+                  marginTop: '6px',
+                  padding: '12px',
+                  background: 'rgba(52, 211, 153, 0.08)',
+                  borderRadius: '10px',
+                  border: '1px solid rgba(52, 211, 153, 0.25)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '8px',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#34d399', fontSize: '10.5px', fontWeight: 700, letterSpacing: '0.6px' }}>
+                  <span>INVESTIGATIVE OBSERVATIONS (INTERCOM DANIEL-INT-001)</span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '11px', color: '#f1f5f9' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{ color: '#34d399' }}>•</span>
+                    <span>KNEW SARAH WAS IN THE BUILDING</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{ color: '#34d399' }}>•</span>
+                    <span>WARNED SARAH ABOUT ACCESS LOGGING</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{ color: '#34d399' }}>•</span>
+                    <span>DIRECTED SARAH TO SERVICE STAIRS</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{ color: '#34d399' }}>•</span>
+                    <span>ASKED SARAH TO KEEP THEIR CONVERSATION SECRET</span>
+                  </div>
+                </div>
+                <div style={{ fontSize: '9.5px', color: '#94a3b8', fontStyle: 'italic', marginTop: '2px' }}>
+                  Verified security recording observations. Does not establish complicity or intent.
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

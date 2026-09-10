@@ -1,0 +1,1071 @@
+/* Investigation Scene motion primitives. Kept separate from App.css/index.css
+   so the scene module's styling stays self-contained per §K. */
+
+@keyframes deskPropDrift {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -1.5px;
+  }
+}
+
+@keyframes hintFadeOut {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 4px);
+  }
+  12% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  78% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -2px);
+  }
+}
+
+@keyframes threadDrawIn {
+  from {
+    stroke-dashoffset: 240;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ── Opening Narration: prop discoverable breathing ──────────────────────── */
+/*
+ * Amplitude is carried via --breathe-amp CSS custom property set inline.
+ * The keyframe uses a low baseline + gentle inhale so the light feels like
+ * a slow, natural breath rather than a pulsing UI alert.
+ * At the caller's base opacity of ~0.14 the effective range is 0.10–0.20.
+ */
+@keyframes propBreathe {
+  0%, 100% {
+    opacity: var(--breathe-base, 0.14);
+  }
+  50% {
+    opacity: calc(var(--breathe-base, 0.14) + var(--breathe-amp, 0.06));
+  }
+}
+
+/* ── Discovery sweep: sequential reveal at end of narration ──────────────── */
+@keyframes discoveryReveal {
+  0% {
+    opacity: var(--breathe-base, 0.14);
+    filter: brightness(1);
+  }
+  30% {
+    opacity: 0.34;
+    filter: brightness(1.12);
+  }
+  100% {
+    opacity: var(--breathe-base, 0.14);
+    filter: brightness(1);
+  }
+}
+
+/* ── Narration skip button ────────────────────────────────────────────────── */
+.narration-skip {
+  position: absolute;
+  bottom: calc(env(safe-area-inset-bottom, 14px) + 18px);
+  right: 18px;
+  z-index: 70;
+  background: rgba(14, 12, 10, 0.72);
+  border: 1px solid rgba(168, 145, 108, 0.35);
+  border-radius: 3px;
+  color: rgba(222, 210, 188, 0.72);
+  font: 10px/1 'JetBrains Mono', monospace;
+  letter-spacing: 1.5px;
+  padding: 7px 13px;
+  cursor: pointer;
+  min-height: 36px;
+  min-width: 44px;
+  animation: narrationSkipFade 0.6s ease forwards;
+  animation-delay: 2s;
+  opacity: 0;
+}
+
+@keyframes narrationSkipFade {
+  to { opacity: 1; }
+}
+
+.narration-skip:hover {
+  background: rgba(24, 20, 16, 0.88);
+  color: rgba(242, 232, 212, 0.9);
+  border-color: rgba(168, 145, 108, 0.55);
+}
+
+/* ── Idle "inspect the table" one-time hint ──────────────────────────────── */
+.idle-table-hint {
+  position: absolute;
+  bottom: calc(env(safe-area-inset-bottom, 14px) + 60px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 68;
+  background: rgba(10, 8, 6, 0.82);
+  border: 1px solid rgba(168, 145, 108, 0.25);
+  border-radius: 3px;
+  color: rgba(218, 206, 182, 0.78);
+  font: italic 11px/1.4 Georgia, serif;
+  letter-spacing: 0.3px;
+  padding: 7px 15px;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: idleHintLifecycle 4.5s ease forwards;
+}
+
+@keyframes idleHintLifecycle {
+  0%   { opacity: 0; transform: translateX(-50%) translateY(6px); }
+  12%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+  72%  { opacity: 1; }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-4px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+  }
+}
+.investigation-scene {
+  container-type: size;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  background: #050403;
+  padding-top: env(safe-area-inset-top, 0);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.scene-world {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.room-plate {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center bottom;
+}
+
+.wall-board,
+.lamp-prop {
+  position: absolute;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.wall-board {
+  aspect-ratio: 6/5;
+  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.75));
+}
+
+.board-preview {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.starter-photo {
+  position: absolute;
+  left: 36%;
+  top: 14%;
+  width: 28%;
+  height: 34%;
+  transform: rotate(-3.5deg);
+}
+
+.physical-polaroid {
+  background: #e4dcc7;
+  padding: 7% 7% 20%;
+  box-shadow: 1px 4px 10px rgba(0, 0, 0, 0.6);
+  border: 1px solid #a89c83;
+}
+
+.starter-photo > img {
+  position: absolute;
+  left: 8%;
+  top: 7%;
+  width: 84%;
+  height: 67%;
+  object-fit: cover;
+  filter: sepia(0.12) brightness(0.9);
+}
+
+.starter-photo > span {
+  position: absolute;
+  top: 80%;
+  width: 100%;
+  left: 0;
+  text-align: center;
+  color: #34251c;
+  font-family: Georgia, serif;
+  font-size: clamp(6px, 1.8cqw, 10px);
+}
+
+.photo-tack {
+  position: absolute;
+  top: 3%;
+  left: 48%;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #8b1e16;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.8), inset 0 1px 1px #fca5a5;
+}
+
+.starter-note {
+  position: absolute;
+  left: 68%;
+  top: 22%;
+  width: 22%;
+  height: 24%;
+  transform: rotate(5deg);
+}
+
+.starter-note > span {
+  position: absolute;
+  inset: 34% 0 0;
+  color: #3d2b1c;
+  font: italic clamp(12px, 3.8cqw, 20px) Georgia, serif;
+  text-align: center;
+}
+
+.preview-pin {
+  position: absolute;
+  width: 20%;
+  height: 14%;
+  background: #d8ceb4;
+  box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.6);
+  padding: 10% 8% 6%;
+}
+
+.preview-pin > span {
+  display: block;
+  color: #3f2c21;
+  font: clamp(4px, 1.1cqw, 7px) Georgia, serif;
+  overflow: hidden;
+  text-align: left;
+  max-height: 100%;
+}
+
+.preview-threads {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  fill: none;
+  stroke: #991b1b;
+  stroke-width: 0.7;
+}
+
+.scene-world button[data-prop-id] {
+  pointer-events: auto;
+}
+
+.room-light {
+  position: absolute;
+  inset: 0;
+  background: #071323;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  z-index: 40;
+  transition: opacity 0.4s ease;
+}
+
+.room-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 41;
+  background: radial-gradient(ellipse at 48% 51%, transparent 42%, rgba(4, 7, 11, 0.45) 100%);
+}
+
+.desk-phone-time {
+  position: absolute;
+  top: 23%;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  color: #d1dde0;
+  font-size: clamp(12px, 4cqw, 22px);
+  font-weight: 300;
+  letter-spacing: 1px;
+  opacity: 0.92;
+  text-shadow: 0 0 12px rgba(133, 157, 173, 0.6);
+  pointer-events: none;
+}
+
+.desk-phone-time small {
+  display: block;
+  font-size: clamp(3px, 0.8cqw, 6px);
+  letter-spacing: 0;
+  margin-top: 3px;
+}
+
+.phone-closeup {
+  width: 100%;
+  height: 100%;
+  padding: calc(env(safe-area-inset-top, 24px) + 28px) 8px calc(env(safe-area-inset-bottom, 12px) + 8px);
+  background: rgba(9, 11, 15, 0.94);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.phone-screen {
+  flex: 1;
+  position: relative;
+  border: 4px solid #1c2228;
+  border-radius: 26px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px #70736e, 0 18px 45px rgba(0, 0, 0, 0.9);
+  background: #0c0e15;
+}
+
+.phone-room-back,
+.scene-back {
+  position: absolute;
+  z-index: 180;
+  left: 14px;
+  top: calc(env(safe-area-inset-top, 12px) + 6px);
+  min-width: 58px;
+  min-height: 40px;
+  padding: 6px 12px;
+  background: rgba(18, 14, 10, 0.78);
+  border: 1px solid rgba(160, 138, 102, 0.4);
+  border-radius: 3px;
+  color: #ded8c9;
+  cursor: pointer;
+  font: 13px/1 'JetBrains Mono', monospace;
+  letter-spacing: 0.5px;
+  touch-action: manipulation;
+}
+
+.physical-closeup {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  padding: calc(env(safe-area-inset-top, 24px) + 36px) 16px calc(env(safe-area-inset-bottom, 16px) + 16px);
+  color: #342b23;
+}
+
+.paper-sheet {
+  height: 100%;
+  overflow-y: auto;
+  position: relative;
+  background-color: #dbcfaf;
+  background-size: 100% 100%;
+  padding: 26px 22px 22px;
+  font: 14px/1.6 Georgia, serif;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.75);
+  border-radius: 2px;
+  scrollbar-color: #86785f transparent;
+}
+
+.paper-sheet header small,
+.paper-sheet small {
+  font: 9px/1.5 'JetBrains Mono', monospace;
+  letter-spacing: 1px;
+  color: #695a45;
+}
+
+.paper-sheet h1 {
+  font: 30px/1.15 Georgia, serif;
+  color: #2b1f14;
+  margin: 8px 0 14px;
+}
+
+.paper-sheet h2 {
+  font: 20px/1.25 Georgia, serif;
+  margin: 8px 0;
+}
+
+.paper-sheet h3 {
+  font: italic 16px Georgia, serif;
+  margin-bottom: 8px;
+  color: #4d3a27;
+}
+
+.paper-sheet section {
+  margin: 20px 0;
+}
+
+.paper-sheet ol {
+  padding-left: 16px;
+}
+
+.paper-sheet li {
+  margin-bottom: 8px;
+}
+
+.paper-rule {
+  border-bottom: 1px solid rgba(140, 123, 96, 0.45);
+  margin: 10px 0 18px;
+}
+
+.paper-sheet footer {
+  border-top: 1px solid rgba(140, 123, 96, 0.45);
+  padding-top: 14px;
+  margin-top: 22px;
+}
+
+.dossier-sheet {
+  border-left: 9px solid #7c5836;
+  transform: rotate(-0.5deg);
+}
+
+.dossier-subject {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.dossier-subject p {
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.dossier-photo {
+  position: relative;
+  width: 100px;
+  height: 125px;
+  flex-shrink: 0;
+  transform: rotate(-3deg);
+}
+
+.dossier-photo > img {
+  position: absolute;
+  left: 12.5%;
+  top: 12%;
+  width: 75%;
+  height: 62%;
+  object-fit: cover;
+}
+
+.ink-stamp {
+  display: inline-block;
+  border: 1.5px solid #8b1e16;
+  transform: rotate(-5deg);
+  padding: 1px 7px;
+  color: #8b1e16 !important;
+  font: 11px/1 'JetBrains Mono', monospace;
+  letter-spacing: 2px;
+  margin: 6px 0 !important;
+}
+
+.paper-action {
+  background: none;
+  border: 0;
+  border-bottom: 1px solid #634e38;
+  color: #42301f;
+  padding: 8px 0;
+  font: italic 14px Georgia, serif;
+  cursor: pointer;
+}
+
+.report-stamp {
+  color: #8b1e16;
+  background: none;
+  border: 2px solid currentColor;
+  font: 12px/1 'JetBrains Mono', monospace;
+  letter-spacing: 1.5px;
+  padding: 10px 14px;
+  margin-top: 18px;
+  transform: rotate(-2.5deg);
+  cursor: pointer;
+  display: block;
+}
+
+.notebook-sheet {
+  border-left: 13px solid #2d2a1e;
+  transform: rotate(0.5deg);
+}
+
+.notebook-writing {
+  background: repeating-linear-gradient(transparent 0px, transparent 27px, rgba(138, 156, 170, 0.18) 28px);
+  line-height: 28px;
+  min-height: 65%;
+  padding: 10px 0 20px;
+}
+
+.notebook-writing section {
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(136, 118, 89, 0.35);
+}
+
+.pencil-note {
+  font-style: italic;
+  color: #726753;
+  margin-top: 20px;
+}
+
+.paper-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid #948464;
+  margin-bottom: 12px;
+}
+
+.paper-tabs button {
+  font: italic 13px Georgia, serif;
+  border: 0;
+  background: none;
+  color: #63533a;
+  flex: 1;
+  padding: 8px 2px;
+  cursor: pointer;
+}
+
+.paper-tabs button[aria-pressed='true'] {
+  border-bottom: 2px solid #573e26;
+  color: #2b1f13;
+  font-weight: bold;
+}
+
+.physical-map {
+  position: relative;
+  width: 108%;
+  margin: 25px -4% 0;
+  aspect-ratio: 4/3;
+  transform: rotate(-1.5deg);
+}
+
+.map-mark {
+  position: absolute;
+  max-width: 42%;
+  font: 11px Georgia, serif;
+  background: none;
+  border: 0;
+  color: #312115;
+  text-shadow: 0 1px #eedcb4;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 44px;
+  text-align: left;
+}
+
+.map-mark i {
+  width: 8px;
+  height: 8px;
+  background: #8b1e16;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  flex-shrink: 0;
+}
+
+.map-mark[aria-pressed='true'] {
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.map-annotation {
+  background: #d4c5a4;
+  padding: 20px;
+  font: 14px/1.6 Georgia, serif;
+  transform: rotate(0.8deg);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.55);
+  margin-top: 20px;
+}
+
+.map-annotation h2 {
+  font: 20px Georgia, serif;
+  margin: 6px 0;
+}
+
+.map-annotation small {
+  letter-spacing: 2px;
+  font: 9px/1 'JetBrains Mono', monospace;
+  color: #634f3a;
+}
+
+/* EVIDENCE BOARD CLOSE-UP */
+.board-closeup {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  color: #ded6c4;
+}
+
+.board-scroll {
+  position: absolute;
+  inset: 54px 0 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #6b553e transparent;
+  touch-action: pan-y;
+}
+
+.board-world {
+  position: relative;
+  min-width: 100%;
+  min-height: 100%;
+  box-sizing: border-box;
+}
+
+.board-base {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.board-base .production-art {
+  width: 100%;
+  height: 100%;
+  filter: none !important;
+}
+
+.board-base img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover !important;
+}
+
+.board-base svg image {
+  preserveAspectRatio: xMidYMid slice !important;
+}
+
+/* Early dressing: Case header tape */
+.board-case-header {
+  position: absolute;
+  left: 4%;
+  top: 18px;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  transform: rotate(-1.8deg);
+  pointer-events: none;
+}
+
+.case-strip {
+  background: #dbcaa3;
+  color: #3b2b1b;
+  font: bold 10px/1 'JetBrains Mono', monospace;
+  letter-spacing: 1.5px;
+  padding: 4px 8px;
+  border-left: 4px solid #8b1e16;
+  box-shadow: 1px 3px 6px rgba(0, 0, 0, 0.6);
+}
+
+.case-class-stamp {
+  font: 8px/1 'JetBrains Mono', monospace;
+  color: #8b1e16;
+  border: 1px solid #8b1e16;
+  padding: 2px 5px;
+  display: inline-block;
+  align-self: flex-start;
+  letter-spacing: 1px;
+}
+
+/* Central Anchor: Sarah Mehta Polaroid */
+.board-sarah {
+  position: absolute;
+  left: 36%;
+  top: 24px;
+  width: 30%;
+  height: 145px;
+  transform: rotate(-3deg);
+  z-index: 6;
+}
+
+.board-sarah > img {
+  position: absolute;
+  left: 8%;
+  top: 7%;
+  width: 84%;
+  height: 67%;
+  object-fit: cover;
+}
+
+.board-sarah > span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 80%;
+  text-align: center;
+  color: #453425;
+  font: 9px/1.2 Georgia, serif;
+}
+
+/* Early dressing: 03:17 note */
+.board-time-note {
+  position: absolute;
+  left: 70%;
+  top: 30px;
+  width: 25%;
+  height: 105px;
+  transform: rotate(5.5deg);
+  z-index: 6;
+}
+
+.board-time-note > span {
+  position: absolute;
+  inset: 35% 0;
+  color: #45301b;
+  font: italic 18px Georgia, serif;
+  text-align: center;
+}
+
+/* Early dressing: Timeline strip */
+.board-timeline-dressing {
+  position: absolute;
+  left: 4%;
+  top: 108px;
+  width: 92%;
+  z-index: 4;
+  pointer-events: none;
+  opacity: 0.7;
+  border-top: 1px dashed rgba(160, 138, 102, 0.4);
+  padding-top: 4px;
+}
+
+.timeline-title {
+  font: 8px/1 'JetBrains Mono', monospace;
+  letter-spacing: 2px;
+  color: #9c8a6e;
+  display: block;
+}
+
+.timeline-ticks {
+  display: flex;
+  justify-content: space-between;
+  font: 9px/1 'JetBrains Mono', monospace;
+  color: #a89a80;
+  margin-top: 4px;
+}
+
+.marker-critical {
+  color: #b91c1c;
+  font-weight: bold;
+}
+
+/* Blank outline sleeves for early game dressing */
+.empty-pin-sleeve {
+  position: absolute;
+  width: 38%;
+  height: 110px;
+  border: 1px dashed rgba(160, 138, 102, 0.35);
+  background: rgba(160, 138, 102, 0.04);
+  pointer-events: none;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-pin-sleeve > span {
+  font: 9px/1 'JetBrains Mono', monospace;
+  letter-spacing: 1.5px;
+  color: rgba(160, 138, 102, 0.45);
+}
+
+.sleeve-1 {
+  left: 6%;
+  top: 175px;
+  transform: rotate(-2deg);
+}
+
+.sleeve-2 {
+  left: 54%;
+  top: 175px;
+  transform: rotate(2deg);
+}
+
+/* EVIDENCE PINS */
+.board-pin {
+  position: absolute;
+  width: 40%;
+  height: 125px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), filter 0.22s ease;
+  z-index: 4;
+  text-align: left;
+  touch-action: manipulation;
+}
+
+.board-pin[aria-pressed='true'] {
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.75)) brightness(1.1);
+  z-index: 15 !important;
+}
+
+.board-pin .evidence-photo {
+  position: absolute;
+  left: 12%;
+  top: 12%;
+  width: 76%;
+  height: 61%;
+  object-fit: cover;
+}
+
+.evidence-ink {
+  position: absolute;
+  inset: 22% 14% 8%;
+  color: #38291e;
+  font: 11px/1.3 Georgia, serif;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.evidence-meta {
+  font: 8px/1 'JetBrains Mono', monospace;
+  letter-spacing: 0.5px;
+  color: #69523a;
+}
+
+.evidence-heading {
+  font-weight: normal;
+  font-style: italic;
+  font-size: 11px;
+  color: #271a0f;
+  line-height: 1.25;
+}
+
+.evidence-detail {
+  font-size: 9px;
+  color: #5c4731;
+}
+
+.photo-pin .evidence-ink {
+  inset: 75% 10% 4%;
+  font-size: 9px;
+}
+
+.photo-pin .evidence-meta {
+  display: none;
+}
+
+.pin-head {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: #991b1b;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), inset 0 1px 1px #fca5a5;
+  z-index: 10;
+}
+
+.board-zoom {
+  position: absolute;
+  right: 12px;
+  top: calc(env(safe-area-inset-top, 12px) + 6px);
+  display: flex;
+  gap: 4px;
+  z-index: 25;
+}
+
+.board-zoom button {
+  width: 38px;
+  height: 38px;
+  background: rgba(18, 14, 10, 0.78);
+  border: 1px solid rgba(160, 138, 102, 0.4);
+  border-radius: 3px;
+  color: #ded8c9;
+  font: 20px/1 Georgia, serif;
+  cursor: pointer;
+}
+
+.connect-evidence {
+  position: absolute;
+  z-index: 25;
+  transform: translate(-50%, -50%);
+  background: #2b1f14;
+  border: 1px solid #a38258;
+  padding: 10px 18px;
+  color: #f5eedb;
+  font: bold 11px/1 'JetBrains Mono', monospace;
+  letter-spacing: 1.5px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.85);
+  cursor: pointer;
+  animation: pulseGlow 1.8s infinite ease-in-out;
+  border-radius: 2px;
+}
+
+/* PHYSICAL DEDUCTION CARDS ON THE BOARD */
+.physical-deduction-card {
+  position: absolute;
+  width: 52%;
+  min-height: 95px;
+  background: #ded2b3;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+  padding: 12px 14px 10px;
+  border-left: 5px solid #8b1e16;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.physical-deduction-card:hover {
+  transform: scale(1.02);
+}
+
+.card-tape {
+  position: absolute;
+  top: -7px;
+  left: 35%;
+  width: 30%;
+  height: 14px;
+  background: rgba(220, 205, 170, 0.75);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transform: rotate(2deg);
+}
+
+.deduction-tag {
+  font: bold 8px/1 'JetBrains Mono', monospace;
+  letter-spacing: 1.5px;
+  color: #8b1e16;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.deduction-title {
+  font: bold 12px/1.25 Georgia, serif;
+  color: #2b1d11;
+  margin: 0 0 6px;
+}
+
+.deduction-points {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 5px;
+  font: 9.5px/1.35 'JetBrains Mono', monospace;
+  color: #4a3622;
+}
+
+.deduction-points li {
+  margin-bottom: 2px;
+}
+
+.deduction-lead {
+  font: italic 9.5px/1.3 Georgia, serif;
+  color: #70583b;
+  margin: 0;
+}
+
+.deduction-pin {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #78350f;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+/* EVIDENCE INSPECTION ASIDE */
+.evidence-inspection {
+  position: absolute;
+  bottom: calc(env(safe-area-inset-bottom, 12px) + 8px);
+  left: 12px;
+  right: 12px;
+  max-height: 42%;
+  overflow-y: auto;
+  background-color: #d8cca8;
+  background-size: 100% 100%;
+  color: #3b2c1c;
+  font: 13px/1.55 Georgia, serif;
+  padding: 18px 20px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.85);
+  transform: rotate(-0.5deg);
+  z-index: 35;
+  border-radius: 2px;
+}
+
+.evidence-inspection h3 {
+  font: italic 17px Georgia, serif;
+  margin: 4px 0 8px;
+  color: #24180d;
+}
+
+.evidence-inspection small {
+  font: 9px/1 'JetBrains Mono', monospace;
+  letter-spacing: 1px;
+  color: #69523a;
+}
+
+.inspection-actions {
+  display: flex;
+  align-items: center;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(136, 118, 89, 0.35);
+}
+
+.connect-action {
+  font-weight: bold;
+  color: #8b1e16;
+}
+
+.feedback-block {
+  padding: 8px 10px;
+  font: 13px/1.5 Georgia, serif;
+}
+
+.feedback-block.success {
+  color: #14532d;
+  font-weight: bold;
+}
+
+.feedback-block.hint {
+  color: #713f12;
+  font-style: italic;
+}
+
+.recorder-art {
+  width: 95%;
+  aspect-ratio: 13/8;
+  margin: 0 auto 15px;
+  transform: rotate(-3deg);
+}
+
+.recorder-track {
+  display: block;
+  width: 100%;
+  text-align: left;
+  min-height: 44px;
+}
+
+.recorder-track[aria-pressed='true'] {
+  color: #862f26;
+  font-weight: bold;
+}
+
+.scene-back,
+.phone-room-back,
+.board-zoom button {
+  min-height: 44px;
+  min-width: 44px;
+}
+

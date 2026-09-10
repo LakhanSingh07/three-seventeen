@@ -1,21 +1,57 @@
-import React, { useState } from 'react';
-import { X, Disc, Play, Pause, Radio } from 'lucide-react';
-import { soundEngine } from '../system/SoundEngine';
-import { hapticEngine } from '../system/HapticEngine';
-
-interface AudioPlayerModalProps {
-  onClose: () => void;
-}
-
-export const AudioPlayerModal: React.FC<AudioPlayerModalProps> = ({
-  onClose,
-}) => {
-  const [activeTrackIndex, setActiveTrackIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-
+import {useState} from 'react';
+import {environmentAssets} from '../scene/assetRegistry';
+import {ProductionArt} from '../scene/ProductionArt';
+interface Props {onClose:()=>void; discoveredEvidenceIds:string[]}
+export function AudioPlayerModal({onClose,discoveredEvidenceIds}:Props){
+ const [activeId,setActiveId]=useState('');
   const audioTracks = [
     {
-      id: 'memo-1',
+      id: 'EVD_VOICE_MEMO_SAR_VM_001',
+      title: 'Voice Memo: Note to Self (SAR-VM-001)',
+      timestamp: '11:15 PM',
+      duration: '0:15',
+      speaker: 'Sarah Mehta',
+      transcript:
+        '"Okay... note to self. Talk to Ryan tomorrow about those numbers. Something still doesn\'t add up. And don\'t message him about it. Just talk at work. Also... Maya\'s going to kill me if I forget Saturday again. That\'s it. I\'m going to sleep."',
+    },
+    {
+      id: 'EVD_VOICE_MEMO_SAR_VM_002',
+      title: "Voice Memo: Numbers Don't Match (SAR-VM-002)",
+      timestamp: '06:15 PM',
+      duration: '0:16',
+      speaker: 'Sarah Mehta',
+      transcript:
+        '"Okay... this is weird. I checked the numbers again. Twice. They don\'t match what Ryan showed me yesterday. Maybe I\'m missing something, but... there are entries here that shouldn\'t exist. I\'m not sending screenshots. Not yet. I\'ll make a copy and keep it somewhere else. Just in case."',
+    },
+    {
+      id: 'EVD_VOICE_MEMO_SAR_VM_003',
+      title: "Voice Memo: Someone Changed It (SAR-VM-003)",
+      timestamp: '08:30 PM',
+      duration: '0:20',
+      speaker: 'Sarah Mehta',
+      transcript:
+        '"Wait... no. I know what I saw. The entries I flagged yesterday... they\'re gone. Not corrected. Gone. And the access log says I opened the file again at 1:12 this morning. I didn\'t. Someone used my account. ...Okay. I\'m making a copy now. And I\'m not keeping it here."',
+    },
+    {
+      id: 'EVD_VOICE_MEMO_SAR_VM_004',
+      title: "Voice Memo: Moved the Copy (SAR-VM-004)",
+      timestamp: '10:45 PM',
+      duration: '0:20',
+      speaker: 'Sarah Mehta',
+      transcript:
+        '"Okay... I moved the copy. It\'s not at home, and it\'s not at work. I don\'t want it anywhere connected to me. Maya doesn\'t know. Ryan doesn\'t know. Nobody does. I wrote down what I need so I don\'t forget it. If I\'m overreacting... fine. But until I know who used my account, it stays where it is."',
+    },
+    {
+      id: 'EVD_VOICE_MEMO_SAR_VM_005',
+      title: "Voice Memo: I Was Followed (SAR-VM-005)",
+      timestamp: '02:45 AM',
+      duration: '0:24',
+      speaker: 'Sarah Mehta',
+      transcript:
+        '"I think someone followed me tonight. I noticed the same car twice. Once outside the café... and again near the station. Maybe it\'s nothing. ...No. I\'m done telling myself that. Someone accessed my account. Someone erased those entries. And now this. I\'m going to get the copy. Then I\'m calling Maya."',
+    },
+    {
+      id: 'EVD_VOICE_MEMO_317',
       title: 'Emergency Voice Memo 03:20 AM',
       timestamp: '03:20 AM',
       duration: '0:34',
@@ -24,16 +60,16 @@ export const AudioPlayerModal: React.FC<AudioPlayerModalProps> = ({
         '"(Heavy breathing, vehicle engine acceleration in background) Someone was waiting by the locker exit... a black sedan has been tailing me since 42nd Street. If you find this phone, the master drive is in Locker 28. Code 8-3-1-7. Don\'t let Ardent take it..."',
     },
     {
-      id: 'call-maya',
-      title: 'Voicemail from Maya (02:35 AM)',
+      id: 'EVD_CALL_MAYA_230',
+      title: "Maya's Unanswered Voicemail (MAYA-VM-001)",
       timestamp: '02:35 AM',
-      duration: '0:18',
+      duration: '0:17',
       speaker: 'Maya',
       transcript:
-        '"Sarah please! Pick up the phone! I saw Alex leaving his place in a hurry. What is happening?!"',
+        '"Sarah, hey... call me when you get this, okay? You said you\'d call me back and now you\'re not answering. I know you\'re probably busy, but... you\'re making me nervous. Just text me. Anything. I don\'t care what time it is. Call me."',
     },
     {
-      id: 'call-alex',
+      id: 'EVD_CALL_ALEX_VOICEMAIL',
       title: 'Voicemail from Alex (03:22 AM)',
       timestamp: '03:22 AM',
       duration: '0:22',
@@ -42,312 +78,55 @@ export const AudioPlayerModal: React.FC<AudioPlayerModalProps> = ({
         '"Sarah I am at Central Station right now! Where are you?! We need to talk before it\'s too late!"',
     },
     {
-      id: 'call-317',
-      title: '3:17 AM Recorded Call Connection',
+      id: 'EVD_CALL_317',
+      title: '3:17 AM Recorded Call Connection (CALL-0317-001)',
       timestamp: '03:17 AM',
-      duration: '0:42',
-      speaker: 'Unknown Number',
+      duration: '0:41',
+      speaker: 'Sarah Mehta & Unknown Caller',
       transcript:
-        '"(Static, distorted low voice) You have the archive. Place it in the locker and walk away. We know where you\'re going, Sarah."',
+        'Unknown: "You have it? You know why I\'m calling."\nSarah: "No. I really don\'t."\nUnknown: "Locker twenty-eight. You opened it."\nSarah: "How do you know that?"\nUnknown: "Sarah... listen to me. Leave what\'s inside and walk away."\nSarah: "You\'ve been following me."\nUnknown: "Go home."\nSarah: "Who are you?"\nUnknown: "You\'re asking the wrong question."\nSarah: "Then what\'s the right one?"\nUnknown: "Who else knew you were coming?"\n[silence]\nSarah: "...Alex?"\nUnknown: "Don\'t trust what you see."',
+    },
+    {
+      id: 'EVID-REC-STATION-001',
+      title: 'Recovered Station Recording (REC-STATION-001)',
+      timestamp: '02:59 AM',
+      duration: '0:17',
+      speaker: 'Sarah Mehta & Environmental Audio',
+      transcript:
+        'SARAH: "Twenty-eight..."\n[metallic sound]\n[footsteps]\nSARAH: "Hello?"\n[distant announcement — unintelligible]\n[recording ends]',
+    },
+    {
+      id: 'EVID-RYAN-VM-001',
+      title: "Ryan's Warning Voicemail (RYAN-VM-001)",
+      timestamp: '11:24 PM',
+      duration: '0:17',
+      speaker: 'Ryan',
+      transcript:
+        'Ryan: "Sarah, hey. I saw your message about the numbers. Don\'t send me anything on Teams or email, okay? Just... leave it for now. I\'ll explain tomorrow when we\'re in the office. And Sarah... don\'t open the audit folder again. Seriously. Just leave it."',
+    },
+    {
+      id: 'EVID-DANIEL-INT-001',
+      title: 'Recovered Intercom Recording (DANIEL-INT-001)',
+      timestamp: '11:12 PM',
+      duration: '0:15',
+      speaker: 'Daniel (Floor 14 Intercom)',
+      transcript:
+        'DANIEL: "Sarah? What are you still doing on this floor? You shouldn\'t be here this late. Listen... don\'t use your access card again. The system\'s logging everything tonight. Take the service stairs. And Sarah... if anyone asks, we didn\'t speak."',
     },
   ];
 
-  const currentTrack = audioTracks[activeTrackIndex];
 
-  const togglePlayback = () => {
-    soundEngine.playTapeClick();
-    hapticEngine.light();
-    setIsPlaying(!isPlaying);
-  };
-
-  return (
-    <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 150,
-        background: 'rgba(5, 7, 14, 0.88)',
-        backdropFilter: 'blur(16px)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '16px',
-        animation: 'fadeIn 0.25s ease',
-      }}
-      onClick={onClose}
-    >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        style={{
-          width: '100%',
-          maxWidth: '560px',
-          maxHeight: '88vh',
-          background: 'linear-gradient(145deg, #181b22 0%, #0c0e14 100%)',
-          borderRadius: '16px',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
-          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.9)',
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden',
-          position: 'relative',
-        }}
-      >
-        {/* Header */}
-        <div
-          style={{
-            padding: '14px 20px',
-            background: 'rgba(20, 24, 34, 0.95)',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Radio size={18} color="#38bdf8" />
-            <span style={{ fontSize: '13px', fontWeight: 800, color: '#f8fafc', letterSpacing: '1px', textTransform: 'uppercase' }}>
-              Micro-Cassette Audio Deck
-            </span>
-          </div>
-
-          <button
-            onClick={() => {
-              soundEngine.playTapeClick();
-              hapticEngine.light();
-              onClose();
-            }}
-            style={{
-              background: 'rgba(255, 255, 255, 0.08)',
-              border: 'none',
-              borderRadius: '50%',
-              width: '28px',
-              height: '28px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#94a3b8',
-              cursor: 'pointer',
-            }}
-          >
-            <X size={16} />
-          </button>
-        </div>
-
-        {/* Cassette Tape Deck Visualizer */}
-        <div
-          style={{
-            padding: '24px 20px',
-            background: '#11141c',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '16px',
-          }}
-        >
-          {/* Cassette Shell Body */}
-          <div
-            style={{
-              width: '280px',
-              height: '140px',
-              background: 'linear-gradient(135deg, #2a2e39, #1c1f26)',
-              borderRadius: '12px',
-              border: '2px solid #3f4452',
-              boxShadow: 'inset 0 2px 4px rgba(255, 255, 255, 0.1), 0 8px 24px rgba(0, 0, 0, 0.6)',
-              padding: '12px',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              position: 'relative',
-            }}
-          >
-            <div
-              style={{
-                background: '#fef08a',
-                borderRadius: '4px',
-                padding: '4px 8px',
-                border: '1px solid #ca8a04',
-                color: '#713f12',
-                fontSize: '10px',
-                fontWeight: 800,
-                textAlign: 'center',
-                letterSpacing: '1px',
-              }}
-            >
-              3:17 EVIDENCE RECORD • CASE 001
-            </div>
-
-            <div
-              style={{
-                height: '54px',
-                background: '#090b10',
-                borderRadius: '8px',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-around',
-                padding: '0 24px',
-                position: 'relative',
-              }}
-            >
-              <div
-                style={{
-                  width: '36px',
-                  height: '36px',
-                  borderRadius: '50%',
-                  border: '3px dashed #64748b',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  animation: isPlaying ? 'spin 2s linear infinite' : 'none',
-                }}
-              >
-                <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ffffff' }} />
-              </div>
-
-              <div style={{ width: '80px', height: '6px', background: '#451a03', borderRadius: '2px' }} />
-
-              <div
-                style={{
-                  width: '36px',
-                  height: '36px',
-                  borderRadius: '50%',
-                  border: '3px dashed #64748b',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  animation: isPlaying ? 'spin 2s linear infinite' : 'none',
-                }}
-              >
-                <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ffffff' }} />
-              </div>
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '9px', color: '#94a3b8', fontWeight: 600 }}>
-              <span>SIDE A</span>
-              <span>TYPE II • CrO2</span>
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '6px' }}>
-            <button
-              onClick={togglePlayback}
-              style={{
-                background: isPlaying ? 'linear-gradient(135deg, #ef4444, #dc2626)' : 'linear-gradient(135deg, #22c55e, #16a34a)',
-                border: 'none',
-                borderRadius: '50%',
-                width: '46px',
-                height: '46px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#ffffff',
-                cursor: 'pointer',
-                boxShadow: isPlaying ? '0 0 16px rgba(239, 68, 68, 0.6)' : '0 0 16px rgba(34, 197, 94, 0.5)',
-              }}
-            >
-              {isPlaying ? <Pause size={20} /> : <Play size={20} style={{ marginLeft: '3px' }} />}
-            </button>
-
-            <div>
-              <div style={{ fontSize: '13px', fontWeight: 700, color: '#f8fafc' }}>
-                {currentTrack.title}
-              </div>
-              <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>
-                Duration: {currentTrack.duration} • Recorded: {currentTrack.timestamp}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Track Selection & Transcript */}
-        <div style={{ padding: '16px 20px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <div style={{ fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
-              Recovered Audio Recordings
-            </div>
-            {audioTracks.map((track, idx) => {
-              const isSelected = activeTrackIndex === idx;
-              return (
-                <button
-                  key={track.id}
-                  onClick={() => {
-                    soundEngine.playTapeClick();
-                    hapticEngine.light();
-                    setActiveTrackIndex(idx);
-                    setIsPlaying(true);
-                  }}
-                  style={{
-                    padding: '8px 12px',
-                    borderRadius: '8px',
-                    background: isSelected ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255, 255, 255, 0.03)',
-                    border: isSelected ? '1px solid rgba(56, 189, 248, 0.4)' : '1px solid rgba(255, 255, 255, 0.05)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    cursor: 'pointer',
-                    textAlign: 'left',
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <Disc size={15} color={isSelected ? '#38bdf8' : '#64748b'} />
-                    <span style={{ fontSize: '12px', fontWeight: 600, color: isSelected ? '#ffffff' : '#cbd5e1' }}>
-                      {track.title}
-                    </span>
-                  </div>
-                  <span style={{ fontSize: '11px', color: '#94a3b8' }}>{track.duration}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          <div
-            style={{
-              background: 'rgba(0, 0, 0, 0.4)',
-              padding: '14px',
-              borderRadius: '10px',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-            }}
-          >
-            <div style={{ fontSize: '11px', fontWeight: 800, color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '6px' }}>
-              Audio Transcript • {currentTrack.speaker}
-            </div>
-            <p style={{ color: '#cbd5e1', fontSize: '12.5px', lineHeight: 1.6, margin: 0, fontStyle: 'italic' }}>
-              {currentTrack.transcript}
-            </p>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div
-          style={{
-            padding: '12px 20px',
-            background: 'rgba(20, 24, 34, 0.95)',
-            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-            display: 'flex',
-            justifyContent: 'flex-end',
-          }}
-        >
-          <button
-            onClick={() => {
-              soundEngine.playTapeClick();
-              onClose();
-            }}
-            style={{
-              background: 'rgba(255, 255, 255, 0.08)',
-              border: '1px solid rgba(255, 255, 255, 0.15)',
-              color: '#cbd5e1',
-              padding: '6px 14px',
-              borderRadius: '6px',
-              fontSize: '11px',
-              fontWeight: 600,
-              cursor: 'pointer',
-            }}
-          >
-            Close Deck
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
+ const recovered=audioTracks.filter(t=>discoveredEvidenceIds.includes(t.id));
+ const currentTrack=recovered.find(t=>t.id===activeId)||recovered[0];
+ return <div className="physical-closeup" style={{backgroundImage:`url(${environmentAssets.desk.surface.real})`}}>
+  <button className="scene-back" onClick={onClose} aria-label="Close recorder">‹ Desk</button>
+  <article className="paper-sheet recorder-sheet">
+   <header><small>RECOVERED RECORDINGS / CASE 001</small><h1>Audio record</h1></header>
+   <div className="recorder-art"><ProductionArt asset={environmentAssets.recorder.body}/></div>
+   {recovered.length===0?<p className="pencil-note">No recordings transferred yet. Log audio evidence from Sarah’s phone to review it here.</p>:<>
+    <nav aria-label="Recovered recordings">{recovered.map(t=><button className="paper-action recorder-track" key={t.id} aria-pressed={currentTrack.id===t.id} onClick={()=>setActiveId(t.id)}>{t.title}</button>)}</nav>
+    <section><small>TRANSCRIPT · {currentTrack.speaker} · {currentTrack.duration}</small><p>{currentTrack.transcript}</p></section>
+   </>}
+  </article>
+ </div>
+}

@@ -1,0 +1,242 @@
+[
+  {
+    "id": "ENV-ROOM-01",
+    "path": "/assets/env/room_background.webp",
+    "width": 941,
+    "height": 1672,
+    "mode": "RGB",
+    "bytes": 262340,
+    "sha256": "f087778c84f77075663258bb07cc6376f680c8e33562fab1dc67cf072cee0a84",
+    "transparency": "opaque plate"
+  },
+  {
+    "id": "BOARD-BASE-01",
+    "path": "/assets/env/board_base.webp",
+    "width": 1374,
+    "height": 1145,
+    "mode": "RGB",
+    "bytes": 590426,
+    "sha256": "6ce4e3562c3be40e70f1f34b75f7c039c1fbd35458d7184dc41c789ae850273d",
+    "transparency": "render-time silhouette mask (RGB raster)"
+  },
+  {
+    "id": "DESK-SURFACE-01",
+    "path": "/assets/env/desk_surface.webp",
+    "width": 1586,
+    "height": 992,
+    "mode": "RGB",
+    "bytes": 408806,
+    "sha256": "12d5c34dc48337e8c61219b3228e83e7f4bf30c65f70c022898cdcaeafdbfe45",
+    "transparency": "opaque plate"
+  },
+  {
+    "id": "DESK-LAMP-01",
+    "path": "/assets/env/desk_lamp_off.webp",
+    "width": 1086,
+    "height": 1448,
+    "mode": "RGB",
+    "bytes": 305108,
+    "sha256": "687228aa3d49c7cc1fded476d710bff2d6172ff2c73cddb9fcf0827f55ee9ab7",
+    "transparency": "render-time silhouette mask (RGB raster)"
+  },
+  {
+    "id": "DESK-LAMP-02",
+    "path": "/assets/env/desk_lamp_on.webp",
+    "width": 1086,
+    "height": 1448,
+    "mode": "RGB",
+    "bytes": 323710,
+    "sha256": "4d7e7b5a376dfea09a799013e784a394b90846ab4fd91e25e058649f54b756ed",
+    "transparency": "render-time silhouette mask (RGB raster)"
+  },
+  {
+    "id": "PROP-PHONE-01",
+    "path": "/assets/env/nova_phone.webp",
+    "width": 887,
+    "height": 1774,
+    "mode": "RGB",
+    "bytes": 170172,
+    "sha256": "dbb96ce1723f7a11bd9c66e504ea90a0e9a216a09f36063d40990de4f4de7846",
+    "transparency": "render-time silhouette mask (RGB raster)"
+  },
+  {
+    "id": "PROP-CASEFOLDER-CLOSED",
+    "path": "/assets/env/case_folder_closed.webp",
+    "width": 1122,
+    "height": 1402,
+    "mode": "RGB",
+    "bytes": 376832,
+    "sha256": "4013620f655ce56799b6e504286bbbc2bb9626a75f3d557d271368c88da28c3b",
+    "transparency": "render-time silhouette mask (RGB raster)"
+  },
+  {
+    "id": "PROP-CASEFOLDER-OPEN",
+    "path": "/assets/env/case_folder_open.webp",
+    "width": 1402,
+    "height": 1122,
+    "mode": "RGB",
+    "bytes": 293660,
+    "sha256": "c08d28712cb4d86a2fdbbf83f3760bfc679ed2e70b708008b29613992d9c90bd",
+    "transparency": "render-time silhouette mask (RGB raster)"
+  },
+  {
+    "id": "PROP-NOTEBOOK-CLOSED",
+    "path": "/assets/env/notebook_closed.webp",
+    "width": 1086,
+    "height": 1448,
+    "mode": "RGB",
+    "bytes": 482046,
+    "sha256": "a18897a6af608085555a70a9135f211dad2852c487c7445dc01494b982be8e0d",
+    "transparency": "render-time silhouette mask (RGB raster)"
+  },
+  {
+    "id": "PROP-NOTEBOOK-OPEN",
+    "path": "/assets/env/notebook_open.webp",
+    "width": 1448,
+    "height": 1086,
+    "mode": "RGBA",
+    "bytes": 172652,
+    "sha256": "b90595964a93a0d1a12cd72735bec33a4bf8958ef6b1a6c469bb0cb23ad9afeb",
+    "transparency": "native alpha"
+  },
+  {
+    "id": "PROP-MAP-FOLDED",
+    "path": "/assets/env/city_map_folded.webp",
+    "width": 1402,
+    "height": 1122,
+    "mode": "RGB",
+    "bytes": 363804,
+    "sha256": "ec0c880e9db75c66802d4a0126b9ab05a51b423fb82325d4c686c5b23dbfe8bd",
+    "transparency": "render-time silhouette mask (RGB raster)"
+  },
+  {
+    "id": "PROP-MAP-PARTIAL",
+    "path": "/assets/env/city_map_partial.webp",
+    "width": 1448,
+    "height": 1086,
+    "mode": "RGB",
+    "bytes": 369120,
+    "sha256": "c946138601b2236e884f2a683692274c8c766a6c3bc84679a4bf5efc97bf3b21",
+    "transparency": "render-time silhouette mask (RGB raster)"
+  },
+  {
+    "id": "PROP-MAP-UNFOLDED",
+    "path": "/assets/env/city_map_unfolded.webp",
+    "width": 1448,
+    "height": 1086,
+    "mode": "RGB",
+    "bytes": 386938,
+    "sha256": "a4a4e356fe83863fdd1355e293801f156c5195f8120b4ede793530ebc4221abe",
+    "transparency": "render-time silhouette mask (RGB raster)"
+  },
+  {
+    "id": "PROP-RECORDER-01",
+    "path": "/assets/env/audio_recorder.webp",
+    "width": 1599,
+    "height": 984,
+    "mode": "RGBA",
+    "bytes": 304646,
+    "sha256": "87bf339b10226b5d952c8896f6b9cb0100ef754e832004c8f22438ec73496331",
+    "transparency": "native alpha"
+  },
+  {
+    "id": "PROP-HEADPHONES-01",
+    "path": "/assets/env/headphones.webp",
+    "width": 1448,
+    "height": 1086,
+    "mode": "RGB",
+    "bytes": 315806,
+    "sha256": "4df0da2f8ac39b6d92167f4c26280552266ca6b686a2aec320952d2d42912dce",
+    "transparency": "render-time silhouette mask (RGB raster)"
+  },
+  {
+    "id": "PROP-EVIDENCEBAG-01",
+    "path": "/assets/env/evidence_bag.webp",
+    "width": 1086,
+    "height": 1448,
+    "mode": "RGB",
+    "bytes": 297124,
+    "sha256": "dadeb25cd60434fae5f6c91a87e3476665d70498e3afa1e676b964e82d1393f9",
+    "transparency": "render-time silhouette mask (RGB raster)"
+  },
+  {
+    "id": "PROP-MUG-01",
+    "path": "/assets/env/coffee_mug.webp",
+    "width": 1254,
+    "height": 1254,
+    "mode": "RGBA",
+    "bytes": 159764,
+    "sha256": "9309b940a8e503f13b8f05885985e8463d94b0f31d666ebd4ab64cfbcfef322d",
+    "transparency": "native alpha"
+  },
+  {
+    "id": "PROP-PAPERS-01",
+    "path": "/assets/env/loose_paper_stack.webp",
+    "width": 1402,
+    "height": 1122,
+    "mode": "RGBA",
+    "bytes": 285164,
+    "sha256": "66db4c5bcf2486e2a1a8bf66e8fc25de0797f15714e9440abbe899a972641bf2",
+    "transparency": "native alpha"
+  },
+  {
+    "id": "PROP-PAPERS-02",
+    "path": "/assets/env/loose_paper_single.webp",
+    "width": 1086,
+    "height": 1448,
+    "mode": "RGBA",
+    "bytes": 284094,
+    "sha256": "6fadbefc2bbb7521c7e860ca23478391bb83d1aaa230c9802917422accf77140",
+    "transparency": "native alpha"
+  },
+  {
+    "id": "PROP-PAPERS-03",
+    "path": "/assets/env/pen.webp",
+    "width": 2172,
+    "height": 724,
+    "mode": "RGBA",
+    "bytes": 124504,
+    "sha256": "63983826529a530aceab9b15a12ab1725a6f6d93596d807f35ad5a276c5657af",
+    "transparency": "native alpha"
+  },
+  {
+    "id": "BOARD-PIN-FRAME-01",
+    "path": "/assets/env/pin_frame_polaroid.webp",
+    "width": 1122,
+    "height": 1402,
+    "mode": "RGBA",
+    "bytes": 327682,
+    "sha256": "0547451781062bca4ba62c4313713839f1e9589a657051c88ba6816e3bd9bc61",
+    "transparency": "native alpha"
+  },
+  {
+    "id": "BOARD-PIN-FRAME-02",
+    "path": "/assets/env/pin_frame_index.webp",
+    "width": 1536,
+    "height": 1024,
+    "mode": "RGBA",
+    "bytes": 209022,
+    "sha256": "e494382e14063ac258159bd67cd466168ac8033ab61e7b15b13d0efb4e5da852",
+    "transparency": "native alpha"
+  },
+  {
+    "id": "BOARD-PIN-FRAME-03",
+    "path": "/assets/env/pin_frame_note.webp",
+    "width": 1225,
+    "height": 1284,
+    "mode": "RGBA",
+    "bytes": 291946,
+    "sha256": "5fc3b92420b40fa812ed901500227de1f39e7b1bb3981b32bc6e0c4f35b5bd20",
+    "transparency": "native alpha"
+  },
+  {
+    "id": "BOARD-PIN-FRAME-04",
+    "path": "/assets/env/pin_frame_print.webp",
+    "width": 1448,
+    "height": 1086,
+    "mode": "RGB",
+    "bytes": 253072,
+    "sha256": "155207bd9b1c92145a540da89196e26fd9c343e1732561b58fe06beca5a8a207",
+    "transparency": "render-time silhouette mask (RGB raster)"
+  }
+]

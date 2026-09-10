@@ -22,7 +22,7 @@ export const ALL_CASES_META: CaseMeta[] = [
     difficulty: 'Intermediate',
     estimatedTime: '20-30 min',
     isLocked: false,
-    coverImage: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&auto=format&fit=crop&q=80',
+    coverImage: '/assets/case001/case-art/case001_cover.webp',
     badge: 'PLAYABLE NOW',
   },
   {
@@ -33,7 +33,7 @@ export const ALL_CASES_META: CaseMeta[] = [
     difficulty: 'Intermediate',
     estimatedTime: '30-40 min',
     isLocked: true,
-    coverImage: 'https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=800&auto=format&fit=crop&q=80',
+    coverImage: '/assets/case001/environments/central_station_night.webp',
     badge: 'COMING SOON',
   },
   {
@@ -44,7 +44,7 @@ export const ALL_CASES_META: CaseMeta[] = [
     difficulty: 'Master',
     estimatedTime: '40-50 min',
     isLocked: true,
-    coverImage: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=800&auto=format&fit=crop&q=80',
+    coverImage: '/assets/case001/environments/rainy_city_night.webp',
     badge: 'COMING SOON',
   },
   {
@@ -55,7 +55,7 @@ export const ALL_CASES_META: CaseMeta[] = [
     difficulty: 'Master',
     estimatedTime: '45-60 min',
     isLocked: true,
-    coverImage: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&auto=format&fit=crop&q=80',
+    coverImage: '/assets/case001/environments/apartment_hallway.webp',
     badge: 'IN PRODUCTION',
   },
 ];

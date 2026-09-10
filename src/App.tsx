@@ -4,29 +4,14 @@ import { CaseEngine } from './cases/case-engine';
 import type { CaseData, CaseSaveState, Deduction, AccusationTheory, EndingData } from './cases/types';
 import { SaveSystem } from './system/SaveSystem';
 import { soundEngine } from './system/SoundEngine';
+import { audioManager } from './system/AudioManager';
 
 import { CaseSelectScreen } from './os/CaseSelectScreen';
-import { InvestigationRoom } from './room/InvestigationRoom';
-import { CaseBoardView } from './room/CaseBoardView';
+import { InvestigationScene } from './scene/InvestigationScene';
 import { FinalReportModal } from './room/FinalReportModal';
 
-import { NovaStatusBar } from './os/NovaStatusBar';
-import { NovaBottomBar } from './os/NovaBottomBar';
-import { NovaLockScreen } from './os/NovaLockScreen';
-import { NovaHomeScreen, type AppId } from './os/NovaHomeScreen';
-
-import { MessagesApp } from './apps/MessagesApp';
-import { PhotosApp } from './apps/PhotosApp';
-import { PhoneApp } from './apps/PhoneApp';
-import { MapsApp } from './apps/MapsApp';
-import { NotesApp } from './apps/NotesApp';
-import { BrowserApp } from './apps/BrowserApp';
-import { FilesApp } from './apps/FilesApp';
-import { ContactsApp } from './apps/ContactsApp';
-import { VoiceMemosApp } from './apps/VoiceMemosApp';
-
 import { CaseResultModal } from './detective/CaseResultModal';
-import { Smartphone, Monitor } from 'lucide-react';
+
 
 export function App() {
   const [caseData] = useState<CaseData>(CASE_001_DATA);
@@ -35,12 +20,90 @@ export function App() {
     return existing || SaveSystem.createInitialState(CASE_001_DATA);
   });
 
-  const [currentScreen, setCurrentScreen] = useState<'title' | 'desk' | 'board' | 'phone_lock' | 'phone_os'>('title');
-  const [activeAppId, setActiveAppId] = useState<AppId | null>(null);
+  // 'investigation' now covers the whole physical room + desk + board +
+  // phone + close-ups — all navigated internally by InvestigationScene's
+  // CameraController instead of being separate top-level screens. See
+  // 'investigation' now covers the whole physical room + desk + board +
+  // phone + close-ups — all navigated internally by InvestigationScene's
+  // CameraController instead of being separate top-level screens.
+  const [currentScreen, setCurrentScreen] = useState<'title' | 'investigation'>('title');
   const [isFinalReportOpen, setIsFinalReportOpen] = useState(false);
   const [activeEnding, setActiveEnding] = useState<EndingData | null>(null);
   const [isMuted, setIsMuted] = useState(false);
-  const [isFramedMode, setIsFramedMode] = useState(true);
+
+  // Viewport detection: detect mobile screen / mobile user agent / QA viewport
+  const [isMobileScreen, setIsMobileScreen] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return (
+      window.innerWidth <= 600 ||
+      /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)
+    );
+  });
+
+  useEffect(() => {
+    const checkViewport = () => {
+      setIsMobileScreen(
+        window.innerWidth <= 600 ||
+          /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)
+      );
+    };
+    window.addEventListener('resize', checkViewport);
+    return () => window.removeEventListener('resize', checkViewport);
+  }, []);
+
+  const qaParam =
+    typeof window !== 'undefined'
+      ? new URLSearchParams(window.location.search).get('qa')
+      : null;
+  const qaViewport = qaParam?.match(/^(360|390|412|430)x(800|844|915|932)$/);
+
+  // Desktop framed mode only when on wide non-mobile screens without QA viewport
+  const isFramedMode = !isMobileScreen && !qaViewport;
+
+  const containerStyle: React.CSSProperties = qaViewport
+    ? {
+        width: `${qaViewport[1]}px`,
+        height: `${qaViewport[2]}px`,
+        maxWidth: '100vw',
+        maxHeight: '100dvh',
+        borderRadius: 0,
+        boxShadow: 'none',
+        border: 'none',
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+        background: '#0c0e15',
+        overflow: 'hidden',
+      }
+    : isMobileScreen
+    ? {
+        width: '100vw',
+        height: '100dvh',
+        maxWidth: '100vw',
+        maxHeight: '100dvh',
+        borderRadius: 0,
+        boxShadow: 'none',
+        border: 'none',
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+        background: '#0c0e15',
+        overflow: 'hidden',
+      }
+    : {
+        width: '100%',
+        maxWidth: '430px',
+        height: '100dvh',
+        maxHeight: '932px',
+        borderRadius: '24px',
+        boxShadow:
+          '0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.1)',
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+        background: '#0c0e15',
+        overflow: 'hidden',
+      };
 
   useEffect(() => {
     const validation = CaseEngine.validateCase(caseData);
@@ -100,7 +163,7 @@ export function App() {
     setSaveState(freshState);
     setActiveEnding(null);
     setIsFinalReportOpen(false);
-    setActiveAppId(null);
+    audioManager.crossfadeToTitle({ durationSec: 2.0 });
     setCurrentScreen('title');
   };
 
@@ -113,7 +176,7 @@ export function App() {
     <div
       style={{
         width: '100vw',
-        height: '100vh',
+        height: '100dvh',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -123,200 +186,31 @@ export function App() {
         overflow: 'hidden',
       }}
     >
-      <div
-        style={{
-          position: 'absolute',
-          top: '12px',
-          right: '16px',
-          zIndex: 200,
-          display: 'flex',
-          gap: '8px',
-        }}
-      >
-        <button
-          onClick={() => setIsFramedMode(!isFramedMode)}
-          style={{
-            background: 'rgba(255, 255, 255, 0.08)',
-            backdropFilter: 'blur(12px)',
-            border: '1px solid rgba(255, 255, 255, 0.15)',
-            borderRadius: '9999px',
-            padding: '6px 12px',
-            color: '#cbd5e1',
-            fontSize: '11px',
-            fontWeight: 600,
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            cursor: 'pointer',
-          }}
-        >
-          {isFramedMode ? <Smartphone size={13} color="#ff7043" /> : <Monitor size={13} color="#00f2fe" />}
-          <span>{isFramedMode ? 'Mobile Frame' : 'Fullscreen'}</span>
-        </button>
-      </div>
+      <div className={isFramedMode ? 'phone-chassis' : ''} style={containerStyle}>
 
-      <div
-        className={isFramedMode ? 'phone-chassis' : ''}
-        style={
-          !isFramedMode
-            ? {
-                width: '100%',
-                height: '100%',
-                maxWidth: '100%',
-                maxHeight: '100%',
-                borderRadius: 0,
-                position: 'relative',
-                display: 'flex',
-                flexDirection: 'column',
-                background: '#0c0e15',
-                overflow: 'hidden',
-              }
-            : undefined
-        }
-      >
         {currentScreen === 'title' && (
           <CaseSelectScreen
             caseData={caseData}
             saveState={saveState}
-            onStartCase={() => setCurrentScreen('desk')}
+            onStartCase={() => setCurrentScreen('investigation')}
             onResetCase={handleReplayCase}
           />
         )}
 
-        {currentScreen === 'desk' && (
-          <InvestigationRoom
+        {currentScreen === 'investigation' && (
+          <InvestigationScene
             caseData={caseData}
             saveState={saveState}
-            onEnterPhone={() => setCurrentScreen('phone_lock')}
-            onOpenBoard={() => setCurrentScreen('board')}
+            onDiscoverEvidence={handleDiscoverEvidence}
             onUnlockDeduction={handleUnlockDeduction}
-            onSubmitAccusation={handleSubmitAccusation}
-            onExitToCaseSelect={() => setCurrentScreen('title')}
-          />
-        )}
-
-        {currentScreen === 'board' && (
-          <CaseBoardView
-            caseData={caseData}
-            saveState={saveState}
-            onUnlockDeduction={handleUnlockDeduction}
-            onBackToDesk={() => setCurrentScreen('desk')}
             onOpenReport={() => setIsFinalReportOpen(true)}
+            onExitToCaseSelect={() => {
+              audioManager.crossfadeToTitle({ durationSec: 2.2 });
+              setCurrentScreen('title');
+            }}
+            isMuted={isMuted}
+            onToggleMute={handleToggleMute}
           />
-        )}
-
-        {currentScreen === 'phone_lock' && (
-          <NovaLockScreen
-            victimName={caseData.victimName}
-            onUnlock={() => setCurrentScreen('phone_os')}
-          />
-        )}
-
-        {currentScreen === 'phone_os' && (
-          <div style={{ flex: 1, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' }}>
-            <NovaStatusBar
-              onBackToDesk={() => {
-                setActiveAppId(null);
-                setCurrentScreen('desk');
-              }}
-              isMuted={isMuted}
-              onToggleMute={handleToggleMute}
-            />
-
-            <div style={{ flex: 1, position: 'relative', overflow: 'hidden', display: 'flex' }}>
-              {!activeAppId ? (
-                <NovaHomeScreen
-                  onOpenApp={(appId) => setActiveAppId(appId)}
-                />
-              ) : (
-                <div style={{ flex: 1, display: 'flex', width: '100%', height: '100%' }}>
-                  {activeAppId === 'messages' && (
-                    <MessagesApp
-                      caseData={caseData}
-                      discoveredEvidenceIds={saveState.discoveredEvidenceIds}
-                      onDiscoverEvidence={handleDiscoverEvidence}
-                      onBackToHome={() => setActiveAppId(null)}
-                    />
-                  )}
-                  {activeAppId === 'photos' && (
-                    <PhotosApp
-                      caseData={caseData}
-                      discoveredEvidenceIds={saveState.discoveredEvidenceIds}
-                      onDiscoverEvidence={handleDiscoverEvidence}
-                      onBackToHome={() => setActiveAppId(null)}
-                    />
-                  )}
-                  {activeAppId === 'phone' && (
-                    <PhoneApp
-                      caseData={caseData}
-                      discoveredEvidenceIds={saveState.discoveredEvidenceIds}
-                      onDiscoverEvidence={handleDiscoverEvidence}
-                      onBackToHome={() => setActiveAppId(null)}
-                    />
-                  )}
-                  {activeAppId === 'maps' && (
-                    <MapsApp
-                      caseData={caseData}
-                      discoveredEvidenceIds={saveState.discoveredEvidenceIds}
-                      onDiscoverEvidence={handleDiscoverEvidence}
-                      onBackToHome={() => setActiveAppId(null)}
-                    />
-                  )}
-                  {activeAppId === 'notes' && (
-                    <NotesApp
-                      caseData={caseData}
-                      discoveredEvidenceIds={saveState.discoveredEvidenceIds}
-                      onDiscoverEvidence={handleDiscoverEvidence}
-                      onBackToHome={() => setActiveAppId(null)}
-                    />
-                  )}
-                  {activeAppId === 'voice_memos' && (
-                    <VoiceMemosApp
-                      caseData={caseData}
-                      discoveredEvidenceIds={saveState.discoveredEvidenceIds}
-                      onDiscoverEvidence={handleDiscoverEvidence}
-                      onBackToHome={() => setActiveAppId(null)}
-                    />
-                  )}
-                  {activeAppId === 'browser' && (
-                    <BrowserApp
-                      caseData={caseData}
-                      discoveredEvidenceIds={saveState.discoveredEvidenceIds}
-                      onDiscoverEvidence={handleDiscoverEvidence}
-                      onBackToHome={() => setActiveAppId(null)}
-                    />
-                  )}
-                  {activeAppId === 'files' && (
-                    <FilesApp
-                      caseData={caseData}
-                      discoveredEvidenceIds={saveState.discoveredEvidenceIds}
-                      onDiscoverEvidence={handleDiscoverEvidence}
-                      onBackToHome={() => setActiveAppId(null)}
-                    />
-                  )}
-                  {activeAppId === 'contacts' && (
-                    <ContactsApp
-                      caseData={caseData}
-                      onOpenAppWithParticipant={(_id) => setActiveAppId('messages')}
-                      onBackToHome={() => setActiveAppId(null)}
-                    />
-                  )}
-                </div>
-              )}
-            </div>
-
-            <NovaBottomBar
-              onHome={() => setActiveAppId(null)}
-              onBack={() => {
-                if (activeAppId) {
-                  setActiveAppId(null);
-                } else {
-                  setCurrentScreen('desk');
-                }
-              }}
-              canGoBack={true}
-            />
-          </div>
         )}
 
         {isFinalReportOpen && (
@@ -339,6 +233,7 @@ export function App() {
             onReplayCase={handleReplayCase}
             onContinueInvestigation={() => setActiveEnding(null)}
             onOpenCaseSelect={() => {
+              audioManager.crossfadeToTitle({ durationSec: 2.2 });
               setActiveEnding(null);
               setCurrentScreen('title');
             }}
